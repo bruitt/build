@@ -1,11 +1,14 @@
 {
-  "name": "@bruitt/lint-app",
+  "name": "@bruitt/eslint-config-lint-app",
   "version": "0.0.0",
   "main": "index.js",
   "bin": {
     "eslint": "./node_modules/.bin/eslint",
     "lint-staged": "./node_modules/.bin/lint-staged",
     "stylelint": "./node_modules/.bin/stylelint"
+  },
+  "scripts": {
+    "postinstall": "mkdir -p ./node_modules/@bruitt && ln -sfn $(pwd) ./node_modules/@bruitt/eslint-config-lint-app"
   },
   "repository": {
     "url": "git@github.com:bruitt/build.git",
@@ -14,7 +17,7 @@
   "author": "Pavel Pertsev <morhetz@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@bruitt/lint-lib": "^0.0.0",
+    "@bruitt/eslint-config-lint-lib": "^0.0.0",
     "eslint-config-airbnb": "^12.0.0",
     "eslint-plugin-jsx-a11y": "^2.2.3",
     "eslint-plugin-react": "^6.4.1",

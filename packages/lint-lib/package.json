@@ -1,10 +1,13 @@
 {
-  "name": "@bruitt/lint-lib",
+  "name": "@bruitt/eslint-config-lint-lib",
   "version": "0.0.0",
   "main": "index.js",
   "bin": {
     "eslint": "./node_modules/.bin/eslint",
     "lint-staged": "./node_modules/.bin/lint-staged"
+  },
+  "scripts": {
+    "postinstall": "mkdir -p ./node_modules/@bruitt && ln -sfn $(pwd) ./node_modules/@bruitt/eslint-config-lint-lib"
   },
   "repository": {
     "url": "git@github.com:bruitt/build.git",

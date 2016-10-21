@@ -1,30 +1,30 @@
-let minimist = require("minimist")
-let path = require("path")
+let minimist = require('minimist')
+let path = require('path')
 
 
-let AggressiveMergingPlugin = require("webpack/lib/optimize/AggressiveMergingPlugin")
-let DedupePlugin = require("webpack/lib/optimize/DedupePlugin")
-let UglifyJsPlugin = require("webpack/lib/optimize/UglifyJsPlugin")
+let AggressiveMergingPlugin = require('webpack/lib/optimize/AggressiveMergingPlugin')
+let DedupePlugin = require('webpack/lib/optimize/DedupePlugin')
+let UglifyJsPlugin = require('webpack/lib/optimize/UglifyJsPlugin')
 
-let CommonsChunkPlugin = require("webpack/lib/optimize/CommonsChunkPlugin")
-let DefinePlugin = require("webpack/lib/DefinePlugin")
-let ProvidePlugin = require("webpack/lib/ProvidePlugin")
-var LoaderOptionsPlugin = require("webpack/lib/LoaderOptionsPlugin")
+let CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin')
+let DefinePlugin = require('webpack/lib/DefinePlugin')
+let ProvidePlugin = require('webpack/lib/ProvidePlugin')
+let LoaderOptionsPlugin = require('webpack/lib/LoaderOptionsPlugin')
 
-let StatsPlugin = require("stats-webpack-plugin")
-let ExtractTextPlugin = require("extract-text-webpack-plugin")
-var HtmlWebpackPlugin = require("html-webpack-plugin")
+let StatsPlugin = require('stats-webpack-plugin')
+let ExtractTextPlugin = require('extract-text-webpack-plugin')
+let HtmlWebpackPlugin = require('html-webpack-plugin')
 
-let postcssBundle = require("@bruitt/postcss-bundle").default
+let postcssBundle = require('@bruitt/postcss-bundle').default
 
 
-var argv = minimist(process.argv.slice(2)).env || {}
+let argv = minimist(process.argv.slice(2)).env || {}
 
 let Globals = {}
 
 Globals.DEBUG = !argv.p && !argv.production &&
-  (process.env.NODE_ENV !== "production") &&
-  (process.env.TARGET !== "production")
+  (process.env.NODE_ENV !== 'production') &&
+  (process.env.TARGET !== 'production')
 
 Globals.devServer = Globals.DEBUG && !!argv.devServer
 Globals.commonChunks = true
@@ -34,24 +34,20 @@ Globals.minimize = !Globals.DEBUG
 Globals.colors = !argv.production && !argv.development
 
 Globals.devServerPort = 3808
-Globals.publicPath = "/"
+Globals.publicPath = '/'
 
 Globals.styles = {}
 Globals.styles.extractCss = Globals.longTermCaching && !Globals.DEBUG
 Globals.styles.cssMangling = !Globals.DEBUG
-Globals.styles.localIdentName = "ns-[name]-[local]"
+Globals.styles.localIdentName = 'ns-[name]-[local]'
 
 Globals.output = {}
-Globals.output.js = "assets/js/[name].[chunkhash].js"
-Globals.output.css = "assets/css/[name].[contenthash].css"
-Globals.output.media = "assets/media/[name].[hash].[ext]"
+Globals.output.js = 'assets/js/[name].[chunkhash].js'
+Globals.output.css = 'assets/css/[name].[contenthash].css'
+Globals.output.media = 'assets/media/[name].[hash].[ext]'
 
-process.env.NODE_ENV = Globals.DEBUG ? "development" : "production"
-process.env.BABEL_ENV = Globals.DEBUG ? "development" : "production"
-
-function stringify(data) {
-  return JSON.stringify(data).replace(/\"([^(\")"]+)\":/g,"$1:")
-}
+process.env.NODE_ENV = Globals.DEBUG ? 'development' : 'production'
+process.env.BABEL_ENV = Globals.DEBUG ? 'development' : 'production'
 
 function getStyleLoaders({ fallbackLoader, loaders, shouldExtract }) {
   return shouldExtract ?
@@ -67,8 +63,8 @@ function webpackBuilder(appConfig) {
   Globals.srcScriptsDir = path.resolve(appConfig.globals.srcScriptsDir)
   Globals.buildScriptsDir = path.resolve(appConfig.globals.buildScriptsDir)
 
-  let localIdentName = Globals.styles.cssMangling ? "[hash:base64]"
-    : Globals.styles.localIdentName || "ns-[name]-[local]"
+  let localIdentName = Globals.styles.cssMangling ? '[hash:base64]'
+    : Globals.styles.localIdentName || 'ns-[name]-[local]'
 
   let config = {
     cache: Globals.DEBUG,
@@ -76,14 +72,14 @@ function webpackBuilder(appConfig) {
     entry: appConfig.entries,
 
     devtool: Globals.DEBUG ?
-      "cheap-module-source-map" :
-      "module-hidden-source-map",
+      'cheap-module-source-map' :
+      'module-hidden-source-map',
 
     output: {
       path: Globals.buildScriptsDir,
       publicPath: Globals.publicPath,
       filename: Globals.longTermCaching ? Globals.output.js :
-        Globals.output.js.replace(".[chunkhash]", "")
+        Globals.output.js.replace('.[chunkhash]', '')
     },
 
     stats: {
@@ -96,16 +92,16 @@ function webpackBuilder(appConfig) {
         debug: Globals.DEBUG,
         minimize: Globals.MINIMIZE,
         options: {
-          postcss: postcssBundle(Globals.styles.browserStack || "")
+          postcss: postcssBundle(Globals.styles.browserStack || '')
         }
       }),
       new ProvidePlugin({
-        R: "ramda"
+        R: 'ramda'
       }),
       new DefinePlugin({
-        "process.env": { NODE_ENV: JSON.stringify(process.env.NODE_ENV) }
+        'process.env': { NODE_ENV: JSON.stringify(process.env.NODE_ENV) }
       }),
-      new StatsPlugin("manifest.json", {
+      new StatsPlugin('manifest.json', {
         chunkModules: false,
         source: false,
         chunks: false,
@@ -115,8 +111,8 @@ function webpackBuilder(appConfig) {
     ],
 
     resolve: {
-      modules: [ Globals.srcScriptsDir, "node_modules" ],
-      extensions: [ ".js", ".jsx" ]
+      modules: [ Globals.srcScriptsDir, 'node_modules' ],
+      extensions: [ '.js', '.jsx' ]
     },
 
     module: {
@@ -124,17 +120,17 @@ function webpackBuilder(appConfig) {
         {
           test: /\.css$/,
           loaders: getStyleLoaders({
-            fallbackLoader: "style-loader",
+            fallbackLoader: 'style-loader',
             loaders: [
               {
-                loader: "css-loader",
+                loader: 'css-loader',
                 query: {
                   importLoaders: 1
                 }
               }, {
-                loader: "postcss-loader",
+                loader: 'postcss-loader',
                 query: {
-                  parser: "postcss-scss"
+                  parser: 'postcss-scss'
                 }
               }
             ],
@@ -143,19 +139,19 @@ function webpackBuilder(appConfig) {
         }, {
           test: /\.pcss$/,
           loaders: getStyleLoaders({
-            fallbackLoader: "style-loader",
+            fallbackLoader: 'style-loader',
             loaders: [
               {
-                loader: "css-loader",
+                loader: 'css-loader',
                 query: {
                   importLoaders: 1,
                   modules: true,
                   localIdentName
                 }
               }, {
-                loader: "postcss-loader",
+                loader: 'postcss-loader',
                 query: {
-                  parser: "postcss-scss"
+                  parser: 'postcss-scss'
                 }
               }
             ],
@@ -163,33 +159,33 @@ function webpackBuilder(appConfig) {
           })
         }, {
           test: /\.jsx?$/,
-          loader: "babel-loader",
+          loader: 'babel-loader',
           exclude: /node_modules/
         }, {
           test: /\.(png|woff|woff2|eot|ttf|svg|gif|jpg|jpeg|bmp)(\?.*$|$)/,
           loaders: Globals.DEBUG ? [
             {
-              loader: "file-loader",
+              loader: 'file-loader',
               query: {
                 name: Globals.output.media
               }
             }
           ] : [
             {
-              loader: "url-loader",
+              loader: 'url-loader',
               query: {
                 name: Globals.output.media,
                 limit: 12000
               }
             }, {
-              loader: "image-webpack-loader",
+              loader: 'image-webpack-loader',
               query: appConfig.images || {}
             }
           ],
           exclude: /symbol/
         }, {
           test: /symbol(.*)\.svg$/,
-          loader: "svg-sprite"
+          loader: 'svg-sprite'
         }
       ]
     }
@@ -253,7 +249,7 @@ function webpackBuilder(appConfig) {
   if (Globals.devServer) {
     config.devServer = {
       port: Globals.devServerPort,
-      headers: { "Access-Control-Allow-Origin": "*" }
+      headers: { 'Access-Control-Allow-Origin': '*' }
     }
 
     let proxy = Globals.proxy || appConfig.proxy

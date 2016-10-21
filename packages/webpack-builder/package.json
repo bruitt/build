@@ -5,7 +5,8 @@
   "scripts": {
     "build": "babel lib -d dist",
     "prepublish": "BABEL_ENV=production npm run build",
-    "lint": "eslint ./lib"
+    "lint": "eslint ./lib",
+    "postinstall": "mkdir -p ./node_modules/@bruitt && ln -sfn $(pwd) ./node_modules/@bruitt/webpack-builder"
   },
   "repository": {
     "type": "git",
@@ -41,7 +42,9 @@
     "url-loader": "^0.5.7"
   },
   "devDependencies": {
-    "@bruitt/lint-lib": "^0.0.0"
+    "@bruitt/eslint-config-lint-lib": "^0.0.0",
+    "babel-preset-bruitt-lib": "^1.1.0",
+    "webpack": "^2.1.0-beta.25"
   },
   "peerDependencies": {
     "webpack": "^2.1.0-beta.25"
