@@ -1,0 +1,23 @@
+{
+  "name": "@bruitt/lint-lib",
+  "version": "1.0.0",
+  "main": "index.js",
+  "bin": {
+    "eslint": "./node_modules/.bin/eslint",
+    "lint-staged": "./node_modules/.bin/lint-staged"
+  },
+  "repository": {
+    "url": "git@github.com:bruitt/lint-lib.git",
+    "type": "git"
+  },
+  "author": "Pavel Pertsev <morhetz@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "babel-eslint": "^7.0.0",
+    "eslint": "^3.8.0",
+    "eslint-config-airbnb-base": "^9.0.0",
+    "eslint-plugin-import": "^2.0.1",
+    "lint-staged": "^3.1.0",
+    "pre-commit": "^1.1.3"
+  }
+}
