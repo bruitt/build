@@ -1,7 +1,6 @@
 let minimist = require('minimist')
 let path = require('path')
 
-
 let AggressiveMergingPlugin = require('webpack/lib/optimize/AggressiveMergingPlugin')
 let DedupePlugin = require('webpack/lib/optimize/DedupePlugin')
 let UglifyJsPlugin = require('webpack/lib/optimize/UglifyJsPlugin')
@@ -10,6 +9,7 @@ let CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin')
 let DefinePlugin = require('webpack/lib/DefinePlugin')
 let ProvidePlugin = require('webpack/lib/ProvidePlugin')
 let LoaderOptionsPlugin = require('webpack/lib/LoaderOptionsPlugin')
+let NoErrorsPlugin = require('webpack/lib/NoErrorsPlugin')
 
 let StatsPlugin = require('stats-webpack-plugin')
 let ExtractTextPlugin = require('extract-text-webpack-plugin')
@@ -17,21 +17,19 @@ let HtmlWebpackPlugin = require('html-webpack-plugin')
 
 let postcssBundle = require('@bruitt/postcss-bundle').default
 
-
 let argv = minimist(process.argv.slice(2)).env || {}
+let env = process.env.TARGET || process.env.NODE_ENV || 'development'
 
 let Globals = {}
 
-Globals.DEBUG = !argv.p && !argv.production &&
-  (process.env.NODE_ENV !== 'production') &&
-  (process.env.TARGET !== 'production')
+Globals.DEBUG = (env === 'development')
 
-Globals.devServer = Globals.DEBUG && !!argv.devServer
+Globals.devServer = Globals.DEBUG && !!env.devServer
 Globals.commonChunks = true
 Globals.longTermCaching = !Globals.devServer
 Globals.minimize = !Globals.DEBUG
 
-Globals.colors = !argv.production && !argv.development
+Globals.colors = !argv.nocolors
 
 Globals.devServerPort = 3808
 Globals.publicPath = '/'
@@ -46,6 +44,7 @@ Globals.output.js = 'assets/js/[name].[chunkhash].js'
 Globals.output.css = 'assets/css/[name].[contenthash].css'
 Globals.output.media = 'assets/media/[name].[hash].[ext]'
 
+process.env.TARGET = env
 process.env.NODE_ENV = Globals.DEBUG ? 'development' : 'production'
 process.env.BABEL_ENV = Globals.DEBUG ? 'development' : 'production'
 
@@ -55,7 +54,9 @@ function getStyleLoaders({ fallbackLoader, loaders, shouldExtract }) {
     [ fallbackLoader, ...loaders ]
 }
 
-function webpackBuilder(appConfig) {
+function webpackBuilder(appConfigMultitarget) {
+  let appConfig = appConfigMultitarget[process.env.TARGET]
+
   Globals = Object.assign({}, Globals, appConfig.globals)
   Globals.styles = Object.assign({}, Globals.styles, appConfig.styles)
   Globals.output = Object.assign({}, Globals.output, appConfig.output)
@@ -99,7 +100,10 @@ function webpackBuilder(appConfig) {
         R: 'ramda'
       }),
       new DefinePlugin({
-        'process.env': { NODE_ENV: JSON.stringify(process.env.NODE_ENV) }
+        'process.env': {
+          NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+          TARGET: JSON.stringify(process.env.TARGET)
+        }
       }),
       new StatsPlugin('manifest.json', {
         chunkModules: false,
@@ -163,7 +167,7 @@ function webpackBuilder(appConfig) {
           exclude: /node_modules/
         }, {
           test: /\.(png|woff|woff2|eot|ttf|svg|gif|jpg|jpeg|bmp)(\?.*$|$)/,
-          loaders: Globals.DEBUG ? [
+          loaders: (Globals.DEBUG ? [
             {
               loader: 'file-loader',
               query: {
@@ -177,15 +181,17 @@ function webpackBuilder(appConfig) {
                 name: Globals.output.media,
                 limit: 12000
               }
-            }, {
+            },
+          ]).concat(!Globals.minimize ? [] : [
+            {
               loader: 'image-webpack-loader',
               query: appConfig.images || {}
             }
-          ],
+          ]),
           exclude: /symbol/
         }, {
           test: /symbol(.*)\.svg$/,
-          loader: 'svg-sprite'
+          loader: 'svg-sprite-loader'
         }
       ]
     }
@@ -208,7 +214,7 @@ function webpackBuilder(appConfig) {
 
   if (Array.isArray(appConfig.htmls)) {
     let htmls = appConfig.htmls.map((item) => {
-      return new HtmlWebpackPlugin(Object.assign(Globals.DEBUG ? {} : {
+      return new HtmlWebpackPlugin(Object.assign(!Globals.minimize ? {} : {
         minify: {
           removeComments: true,
           collapseWhitespace: true,
@@ -249,12 +255,20 @@ function webpackBuilder(appConfig) {
   if (Globals.devServer) {
     config.devServer = {
       port: Globals.devServerPort,
-      headers: { 'Access-Control-Allow-Origin': '*' }
+      headers: { 'Access-Control-Allow-Origin': '*' },
+      historyApiFallback: true,
+      hot: true,
+      noInfo: true
     }
 
-    let proxy = Globals.proxy || appConfig.proxy
-    if (proxy) {
-      config.devServer.proxy = proxy
+    config.plugins.push(new NoErrorsPlugin())
+
+    if (appConfig.proxy) {
+      config.devServer.proxy = appConfig.proxy
+    }
+
+    if (appConfig.historyApiFallback) {
+      config.devServer.historyApiFallback = appConfig.historyApiFallback
     }
   }
 
