@@ -2,7 +2,6 @@ let minimist = require('minimist')
 let path = require('path')
 
 let AggressiveMergingPlugin = require('webpack/lib/optimize/AggressiveMergingPlugin')
-let DedupePlugin = require('webpack/lib/optimize/DedupePlugin')
 let UglifyJsPlugin = require('webpack/lib/optimize/UglifyJsPlugin')
 
 let CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin')
@@ -24,7 +23,7 @@ let Globals = {}
 
 Globals.DEBUG = (env === 'development')
 
-Globals.devServer = Globals.DEBUG && !!env.devServer
+Globals.devServer = Globals.DEBUG && !!argv.devServer
 Globals.commonChunks = true
 Globals.longTermCaching = !Globals.devServer
 Globals.minimize = !Globals.DEBUG
@@ -234,7 +233,6 @@ function webpackBuilder(appConfigMultitarget) {
 
   if (Globals.minimize) {
     config.plugins.push(
-      new DedupePlugin(),
       new UglifyJsPlugin({
         compress: {
           screw_ie8: true,
@@ -256,9 +254,7 @@ function webpackBuilder(appConfigMultitarget) {
     config.devServer = {
       port: Globals.devServerPort,
       headers: { 'Access-Control-Allow-Origin': '*' },
-      historyApiFallback: true,
-      hot: true,
-      noInfo: true
+      historyApiFallback: true
     }
 
     config.plugins.push(new NoErrorsPlugin())
