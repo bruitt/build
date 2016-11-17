@@ -101,7 +101,8 @@ function webpackBuilder(appConfigMultitarget) {
       new DefinePlugin({
         'process.env': {
           NODE_ENV: JSON.stringify(process.env.NODE_ENV),
-          TARGET: JSON.stringify(process.env.TARGET)
+          TARGET: JSON.stringify(process.env.TARGET),
+          HISTORY: JSON.stringify(appConfig.history || {})
         }
       }),
       new StatsPlugin('manifest.json', {
