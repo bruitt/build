@@ -182,12 +182,12 @@ function webpackBuilder(appConfigMultitarget) {
                 limit: 12000
               }
             },
-          ]).concat(!Globals.minimize ? [] : [
+          ]).concat((Globals.minimize && !!appConfig.images) ? [
             {
               loader: 'image-webpack-loader',
               query: appConfig.images || {}
             }
-          ]),
+          ] : []),
           exclude: /symbol/
         }, {
           test: /symbol(.*)\.svg$/,
