@@ -17,11 +17,11 @@ let HtmlWebpackPlugin = require('html-webpack-plugin')
 let postcssBundle = require('@bruitt/postcss-bundle').default
 
 let argv = minimist(process.argv.slice(2)).env || {}
-let env = process.env.TARGET || process.env.NODE_ENV || 'development'
+let target = process.env.TARGET || process.env.NODE_ENV || 'production'
 
 let Globals = {}
 
-Globals.DEBUG = (env === 'development')
+Globals.DEBUG = (target === 'development')
 
 Globals.devServer = Globals.DEBUG && !!argv.devServer
 Globals.commonChunks = true
@@ -43,7 +43,7 @@ Globals.output.js = 'assets/js/[name].[chunkhash].js'
 Globals.output.css = 'assets/css/[name].[contenthash].css'
 Globals.output.media = 'assets/media/[name].[hash].[ext]'
 
-process.env.TARGET = env
+process.env.TARGET = target
 process.env.NODE_ENV = Globals.DEBUG ? 'development' : 'production'
 process.env.BABEL_ENV = Globals.DEBUG ? 'development' : 'production'
 
@@ -53,8 +53,8 @@ function getStyleLoaders({ fallbackLoader, loaders, shouldExtract }) {
     [ fallbackLoader, ...loaders ]
 }
 
-function webpackBuilder(appConfigMultitarget) {
-  let appConfig = appConfigMultitarget[process.env.TARGET]
+function webpackBuilder(appConfig) {
+  process.env.HISTORY = appConfig.history || {}
 
   Globals = Object.assign({}, Globals, appConfig.globals)
   Globals.styles = Object.assign({}, Globals.styles, appConfig.styles)
@@ -99,11 +99,7 @@ function webpackBuilder(appConfigMultitarget) {
         R: 'ramda'
       }),
       new DefinePlugin({
-        'process.env': {
-          NODE_ENV: JSON.stringify(process.env.NODE_ENV),
-          TARGET: JSON.stringify(process.env.TARGET),
-          HISTORY: JSON.stringify(appConfig.history || {})
-        }
+        'process.env': JSON.stringify(process.env)
       }),
       new StatsPlugin('manifest.json', {
         chunkModules: false,
