@@ -1,6 +1,6 @@
 {
   "name": "@bruitt/webpack-builder",
-  "version": "3.0.4",
+  "version": "3.1.0",
   "main": "dist/index.js",
   "bin": {
     "webpack": "./node_modules/.bin/webpack",

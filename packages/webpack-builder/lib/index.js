@@ -17,7 +17,7 @@ let HtmlWebpackPlugin = require('html-webpack-plugin')
 let postcssBundle = require('@bruitt/postcss-bundle').default
 
 let argv = minimist(process.argv.slice(2)).env || {}
-let target = process.env.TARGET || process.env.NODE_ENV || 'production'
+let target = process.env.TARGET || process.env.NODE_ENV || 'development'
 
 let Globals = {}
 
@@ -53,8 +53,10 @@ function getStyleLoaders({ fallbackLoader, loaders, shouldExtract }) {
     [ fallbackLoader, ...loaders ]
 }
 
-function webpackBuilder(appConfig) {
-  process.env.HISTORY = appConfig.history || {}
+function webpackBuilder(appConfig, envConfig) {
+  envConfig.HISTORY = appConfig.history || {}
+  envConfig.NODE_ENV = process.env.NODE_ENV
+  envConfig.TARGET = process.env.TARGET
 
   Globals = Object.assign({}, Globals, appConfig.globals)
   Globals.styles = Object.assign({}, Globals.styles, appConfig.styles)
@@ -99,7 +101,7 @@ function webpackBuilder(appConfig) {
         R: 'ramda'
       }),
       new DefinePlugin({
-        'process.env': JSON.stringify(process.env)
+        'process.env': JSON.stringify(envConfig)
       }),
       new StatsPlugin('manifest.json', {
         chunkModules: false,
