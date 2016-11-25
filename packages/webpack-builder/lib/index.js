@@ -58,9 +58,9 @@ function webpackBuilder(appConfig, envConfig) {
   envConfig.NODE_ENV = process.env.NODE_ENV
   envConfig.TARGET = process.env.TARGET
 
-  processEnv = {}
+  let processEnv = {}
   Object.keys(envConfig).forEach((key) => {
-    processEnv[key] = envConfig[key]
+    processEnv[key] = JSON.stringify(envConfig[key])
   })
 
   Globals = Object.assign({}, Globals, appConfig.globals)
