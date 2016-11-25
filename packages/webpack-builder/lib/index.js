@@ -58,6 +58,11 @@ function webpackBuilder(appConfig, envConfig) {
   envConfig.NODE_ENV = process.env.NODE_ENV
   envConfig.TARGET = process.env.TARGET
 
+  processEnv = {}
+  Object.keys(envConfig).forEach((key) => {
+    processEnv[key] = envConfig[key]
+  })
+
   Globals = Object.assign({}, Globals, appConfig.globals)
   Globals.styles = Object.assign({}, Globals.styles, appConfig.styles)
   Globals.output = Object.assign({}, Globals.output, appConfig.output)
@@ -101,7 +106,7 @@ function webpackBuilder(appConfig, envConfig) {
         R: 'ramda'
       }),
       new DefinePlugin({
-        'process.env': JSON.stringify(envConfig)
+        'process.env': processEnv
       }),
       new StatsPlugin('manifest.json', {
         chunkModules: false,
