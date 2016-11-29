@@ -6,16 +6,12 @@ import createSagaMiddleware from 'redux-saga'
 
 import hx from '@bruitt/hyperscript/dist/react'
 
+import 'react-hot-loader/patch'
+import 'babel-polyfill'
+import 'normalize.css/normalize.css'
+import './reset.pcss'
+
 let h = hx({})
-
-let appEntry = () => {
-  require('react-hot-loader/patch')
-  require('babel-polyfill')
-  require('normalize.css/normalize.css')
-  require('./reset.pcss')
-}
-
-export default appEntry
 
 export let configureStore = (rootReducer, initialState) => {
   let sagaMiddleware = createSagaMiddleware()
