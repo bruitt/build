@@ -54,7 +54,15 @@ function getStyleLoaders({ fallbackLoader, loaders, shouldExtract }) {
 }
 
 function webpackBuilder(appConfig, envConfig) {
-  envConfig.HISTORY = appConfig.history || {}
+  if (!!appConfig.history) {
+    envConfig.HISTORY = appConfig.history
+  } else {
+    envConfig.HISTORY =  {}
+    Object.keys(appConfig.entries).forEach((key) => {
+      envConfig.HISTORY[key] = { basename: `/${key}` }
+    })
+  }
+
   envConfig.NODE_ENV = process.env.NODE_ENV
   envConfig.TARGET = process.env.TARGET
 
