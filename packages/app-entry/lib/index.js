@@ -1,0 +1,47 @@
+import { render } from 'react-dom'
+import { AppContainer } from 'react-hot-loader'
+import { Provider } from 'react-redux'
+import { combineReducers, createStore, applyMiddleware, compose } from 'redux'
+import createSagaMiddleware from 'redux-saga'
+
+import hx from '@bruitt/hyperscript/dist/react'
+
+let h = hx({})
+
+let appEntry = () => {
+  require('react-hot-loader/patch')
+  require('babel-polyfill')
+  require('normalize.css/normalize.css')
+  require('./reset.pcss')
+}
+
+export default appEntry
+
+export let configureStore = (rootReducer, initialState) => {
+  let sagaMiddleware = createSagaMiddleware()
+
+  let createStoreWithMiddleware = compose(
+    applyMiddleware(sagaMiddleware)
+  )(createStore)
+
+  let getReducers = () => combineReducers(rootReducer)
+
+  let store = createStoreWithMiddleware(getReducers(), initialState)
+  store.runSaga = sagaMiddleware.run
+
+  return store
+}
+
+export let wrapAppComponent = (store, Component) => {
+  return h(AppContainer, [
+    h(Provider, { store }, [
+      h(Component)
+    ])
+  ])
+}
+
+export let renderAppComponent = (root, store) => (Component) => {
+  let wrappedComponent = wrapAppComponent(store, Component)
+
+  render(wrappedComponent, root)
+}
