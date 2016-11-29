@@ -1,3 +1,9 @@
+import 'react-hot-loader/patch'
+import 'babel-polyfill'
+import 'normalize.css/normalize.css'
+import './reset.pcss'
+
+/* eslint-disable */
 import { render } from 'react-dom'
 import { AppContainer } from 'react-hot-loader'
 import { Provider } from 'react-redux'
@@ -5,11 +11,7 @@ import { combineReducers, createStore, applyMiddleware, compose } from 'redux'
 import createSagaMiddleware from 'redux-saga'
 
 import hx from '@bruitt/hyperscript/dist/react'
-
-import 'react-hot-loader/patch'
-import 'babel-polyfill'
-import 'normalize.css/normalize.css'
-import './reset.pcss'
+/* eslint-enable */
 
 let h = hx({})
 
