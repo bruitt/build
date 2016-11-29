@@ -221,7 +221,7 @@ function webpackBuilder(appConfig, envConfig) {
     htmls = Object.keys(appConfig.entries).map((key) => {
       return {
         template: htmls.template,
-        filename: `${key}.html`
+        filename: `${key}.html`,
         chunks: [ key ]
       }
     })
