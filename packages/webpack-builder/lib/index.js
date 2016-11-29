@@ -59,7 +59,8 @@ function webpackBuilder(appConfig, envConfig) {
   } else {
     envConfig.HISTORY =  {}
     Object.keys(appConfig.entries).forEach((key) => {
-      envConfig.HISTORY[key] = { basename: `/${key}` }
+      let k = (key === 'index') ? '' : key
+      envConfig.HISTORY[key] = { basename: `/${k}` }
     })
   }
 
@@ -227,6 +228,7 @@ function webpackBuilder(appConfig, envConfig) {
 
   if (!!htmls && !Array.isArray(htmls) && !!htmls.template) {
     htmls = Object.keys(appConfig.entries).map((key) => {
+      let k = (key === 'index') ? '' : key
       return {
         template: htmls.template,
         filename: `${key}.html`,
@@ -291,8 +293,9 @@ function webpackBuilder(appConfig, envConfig) {
       config.devServer.historyApiFallback = appConfig.historyApiFallback
     } else {
       let rewrites = Object.keys(appConfig.entries).map((key) => {
+        let k = (key === 'index') ? '' : key
         return {
-          from: new RegExp(`/${key}`),
+          from: new RegExp(`/${k}`),
           to: `/${key}.html`
         }
       })
