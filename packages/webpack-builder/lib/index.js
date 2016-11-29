@@ -215,8 +215,20 @@ function webpackBuilder(appConfig, envConfig) {
     config.plugins = config.plugins.concat(commons)
   }
 
-  if (Array.isArray(appConfig.htmls)) {
-    let htmls = appConfig.htmls.map((item) => {
+  let { htmls } = appConfig
+
+  if (!!htmls && !Array.isArray(htmls) && !!htmls.template) {
+    htmls = Object.keys(appConfig.entries).map((key) => {
+      return {
+        template: htmls.template,
+        filename: `${key}.html`
+        chunks: [ key ]
+      }
+    })
+  }
+
+  if (Array.isArray(htmls)) {
+    let htmlPlugins = htmls.map((item) => {
       return new HtmlWebpackPlugin(Object.assign(!Globals.minimize ? {} : {
         minify: {
           removeComments: true,
@@ -232,7 +244,7 @@ function webpackBuilder(appConfig, envConfig) {
         }
       }, item))
     })
-    config.plugins = config.plugins.concat(htmls)
+    config.plugins = config.plugins.concat(htmlPlugins)
   }
 
   if (Globals.minimize) {
@@ -269,6 +281,14 @@ function webpackBuilder(appConfig, envConfig) {
 
     if (appConfig.historyApiFallback) {
       config.devServer.historyApiFallback = appConfig.historyApiFallback
+    } else {
+      let rewrites = Object.keys(appConfig.entries).map((key) => {
+        return {
+          from: new RegExp(`/${key}`),
+          to: `/${key}.html`
+        }
+      })
+      config.devServer.historyApiFallback = { rewrites }
     }
   }
 
