@@ -9,6 +9,7 @@ import { AppContainer } from 'react-hot-loader'
 import { Provider } from 'react-redux'
 import { combineReducers, createStore, applyMiddleware, compose } from 'redux'
 import createSagaMiddleware from 'redux-saga'
+import WebFont from 'webfontloader'
 
 import hx from '@bruitt/hyperscript/dist/react'
 /* eslint-enable */
@@ -16,6 +17,10 @@ import hx from '@bruitt/hyperscript/dist/react'
 let h = hx({})
 
 export let configureStore = (rootReducer, initialState) => {
+  if (process.env.WEBFONTLOADER) {
+    WebFont(process.env.WEBFONTLOADER)
+  }
+
   let sagaMiddleware = createSagaMiddleware()
 
   let createStoreWithMiddleware = compose(
