@@ -1,6 +1,6 @@
 {
   "name": "@bruitt/app-entry",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "main": "dist/index.js",
   "scripts": {
     "build": "babel lib -d dist && cp lib/reset.pcss dist",

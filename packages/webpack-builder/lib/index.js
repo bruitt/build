@@ -293,9 +293,9 @@ function webpackBuilder(appConfig, envConfig) {
       config.devServer.historyApiFallback = appConfig.historyApiFallback
     } else {
       let rewrites = Object.keys(appConfig.entries).map((key) => {
-        let k = (key === 'index') ? '' : key
+        // let k = (key === 'index') ? '' : key
         return {
-          from: new RegExp(`/${k}`),
+          from: new RegExp(`/${key}`),
           to: `/${key}.html`
         }
       })
