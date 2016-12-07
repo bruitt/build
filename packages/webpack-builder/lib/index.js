@@ -9,6 +9,7 @@ let DefinePlugin = require('webpack/lib/DefinePlugin')
 let ProvidePlugin = require('webpack/lib/ProvidePlugin')
 let LoaderOptionsPlugin = require('webpack/lib/LoaderOptionsPlugin')
 let NoErrorsPlugin = require('webpack/lib/NoErrorsPlugin')
+let NamedModulesPlugin = require('webpack/lib/NamedModulesPlugin ')
 
 let StatsPlugin = require('stats-webpack-plugin')
 let ExtractTextPlugin = require('extract-text-webpack-plugin')
@@ -284,6 +285,7 @@ function webpackBuilder(appConfig, envConfig) {
     }
 
     config.plugins.push(new NoErrorsPlugin())
+    config.plugins.push(new NamedModulesPlugin())
 
     if (appConfig.proxy) {
       config.devServer.proxy = appConfig.proxy
