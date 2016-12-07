@@ -61,7 +61,9 @@ function webpackBuilder(appConfig, envConfig) {
     envConfig.HISTORY =  {}
     Object.keys(appConfig.entries).forEach((key) => {
       let k = (key === 'index') ? '' : key
-      envConfig.HISTORY[key] = { basename: `/${k}` }
+      let entry = appConfig.entries[key]
+      let entryName = path.basename(entry, '.js')
+      envConfig.HISTORY[entryName] = { basename: `/${k}` }
     })
   }
 
@@ -229,7 +231,7 @@ function webpackBuilder(appConfig, envConfig) {
 
   if (!!htmls && !Array.isArray(htmls) && !!htmls.template) {
     htmls = Object.keys(appConfig.entries).map((key) => {
-      let k = (key === 'index') ? '' : key
+      // let k = (key === 'index') ? '' : key
       return {
         template: htmls.template,
         filename: `${key}.html`,
