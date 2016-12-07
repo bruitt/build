@@ -9,7 +9,7 @@ let DefinePlugin = require('webpack/lib/DefinePlugin')
 let ProvidePlugin = require('webpack/lib/ProvidePlugin')
 let LoaderOptionsPlugin = require('webpack/lib/LoaderOptionsPlugin')
 let NoErrorsPlugin = require('webpack/lib/NoErrorsPlugin')
-let NamedModulesPlugin = require('webpack/lib/NamedModulesPlugin ')
+let NamedModulesPlugin = require('webpack/lib/NamedModulesPlugin')
 
 let StatsPlugin = require('stats-webpack-plugin')
 let ExtractTextPlugin = require('extract-text-webpack-plugin')
