@@ -1,6 +1,7 @@
 module.exports = {
   extends: [
-    '@bruitt/lint-lib'
+    'airbnb',
+    '@bruitt/eslint-config-lint-base'
   ].map(require.resolve),
   rules: {
     'jsx-a11y/no-static-element-interactions': 'warn',

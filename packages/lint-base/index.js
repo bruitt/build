@@ -7,6 +7,7 @@ module.exports = {
     'arrow-body-style': [ 'off', 'as-needed' ],
     'array-bracket-spacing': [ 'error', 'always', { 'objectsInArrays': false, 'arraysInArrays': false } ],
     'arrow-parens': [ 'error', 'always' ],
+    'class-methods-use-this': [ 'error', { 'exceptMethods': [ 'render' ] } ],
     'comma-dangle': [ 'error', 'never' ],
     'dot-notation': [ 'error', { 'allowKeywords': true, 'allowPattern': '^[A-Z]+[A-Za-z]+$' } ],
     'global-require': 'warn',
