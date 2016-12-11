@@ -1,7 +1,8 @@
 module.exports = {
   extends: [
-    'eslint-config-airbnb',
-    '@bruitt/eslint-config-lint-base'
+    '@bruitt/eslint-config-lint-base',
+    'eslint-config-airbnb/rules/react',
+    'eslint-config-airbnb/rules/react-a11y'
   ].map(require.resolve),
   rules: {
     'jsx-a11y/no-static-element-interactions': 'warn',
