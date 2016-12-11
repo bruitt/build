@@ -1,6 +1,6 @@
 module.exports = {
   extends: [
-    'airbnb',
+    'eslint-config-airbnb',
     '@bruitt/eslint-config-lint-base'
   ].map(require.resolve),
   rules: {
