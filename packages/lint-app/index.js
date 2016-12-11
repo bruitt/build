@@ -12,7 +12,7 @@ module.exports = {
     'react/prop-types': 'off',
     'react/no-multi-comp': 'off',
     'react/sort-comp': [
-      'error',
+      'warn',
       {
         'order': [
           'static-methods',
