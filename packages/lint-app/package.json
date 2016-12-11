@@ -3,8 +3,6 @@
   "version": "0.0.2",
   "main": "index.js",
   "bin": {
-    "eslint": "./node_modules/.bin/eslint",
-    "lint-staged": "./node_modules/.bin/lint-staged",
     "stylelint": "./node_modules/.bin/stylelint"
   },
   "scripts": {
@@ -17,11 +15,11 @@
   "author": "Pavel Pertsev <morhetz@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@bruitt/eslint-config-lint-lib": "^0.0.0",
-    "eslint-config-airbnb": "^12.0.0",
-    "eslint-plugin-jsx-a11y": "^2.2.3",
-    "eslint-plugin-react": "^6.4.1",
-    "stylelint": "^7.4.2",
-    "stylelint-config-standard": "^13.0.2"
+    "@bruitt/eslint-config-lint-base": "^0.0.2",
+    "eslint-config-airbnb": "^13.0.0",
+    "eslint-plugin-jsx-a11y": "^3.0.1",
+    "eslint-plugin-react": "^6.8.0",
+    "stylelint": "^7.6.0",
+    "stylelint-config-standard": "^15.0.0"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@bruitt/eslint-config-lint-base",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "index.js",
   "bin": {
     "eslint": "./node_modules/.bin/eslint",
