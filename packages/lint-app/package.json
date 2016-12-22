@@ -1,6 +1,6 @@
 {
   "name": "@bruitt/eslint-config-lint-app",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "main": "index.js",
   "bin": {
     "stylelint": "./node_modules/.bin/stylelint"

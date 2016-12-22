@@ -199,7 +199,7 @@ function webpackBuilder(appConfig, envConfig) {
             },
           ]).concat((Globals.minimize && !!appConfig.images) ? [
             {
-              loader: 'image-webpack-loader',
+              loader: '@bruitt/image-webpack-loader',
               query: appConfig.images || {}
             }
           ] : []),

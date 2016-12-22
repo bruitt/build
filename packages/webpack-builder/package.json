@@ -35,7 +35,7 @@
     "extract-text-webpack-plugin": "^2.0.0-beta.4",
     "file-loader": "^0.9.0",
     "html-webpack-plugin": "^2.22.0",
-    "image-webpack-loader": "^3.0.0",
+    "@bruitt/image-webpack-loader": "^3.1.1",
     "minimist": "^1.2.0",
     "postcss-loader": "^0.13.0",
     "postcss-scss": "^0.3.0",
@@ -44,7 +44,7 @@
     "style-loader": "^0.13.1",
     "svg-sprite-loader": "0.0.28",
     "url-loader": "^0.5.7",
-    "webpack": "^2.1.0-beta.27",
+    "webpack": "^2.2.0-rc",
     "webpack-dev-server": "^2.1.0-beta.11"
   },
   "devDependencies": {
