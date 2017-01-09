@@ -50,7 +50,7 @@ process.env.BABEL_ENV = Globals.DEBUG ? 'development' : 'production'
 
 function getStyleLoaders({ fallbackLoader, loaders, shouldExtract }) {
   return shouldExtract ?
-    [ ExtractTextPlugin.extract({ fallbackLoader, loaders }) ] :
+    [ ExtractTextPlugin.extract({ fallbackLoader, loader: loaders }) ] :
     [ fallbackLoader, ...loaders ]
 }
 
@@ -135,20 +135,20 @@ function webpackBuilder(appConfig, envConfig) {
     },
 
     module: {
-      loaders: [
+      rules: [
         {
           test: /\.css$/,
-          loaders: getStyleLoaders({
+          use: getStyleLoaders({
             fallbackLoader: 'style-loader',
             loaders: [
               {
                 loader: 'css-loader',
-                query: {
+                options: {
                   importLoaders: 1
                 }
               }, {
                 loader: 'postcss-loader',
-                query: {
+                options: {
                   parser: 'postcss-scss'
                 }
               }
@@ -157,19 +157,19 @@ function webpackBuilder(appConfig, envConfig) {
           })
         }, {
           test: /\.pcss$/,
-          loaders: getStyleLoaders({
+          use: getStyleLoaders({
             fallbackLoader: 'style-loader',
             loaders: [
               {
                 loader: 'css-loader',
-                query: {
+                options: {
                   importLoaders: 1,
                   modules: true,
                   localIdentName
                 }
               }, {
                 loader: 'postcss-loader',
-                query: {
+                options: {
                   parser: 'postcss-scss'
                 }
               }
@@ -178,21 +178,21 @@ function webpackBuilder(appConfig, envConfig) {
           })
         }, {
           test: /\.jsx?$/,
-          loader: 'babel-loader',
+          use: 'babel-loader',
           exclude: /node_modules/
         }, {
           test: /\.(png|woff|woff2|eot|ttf|svg|gif|jpg|jpeg|bmp)(\?.*$|$)/,
-          loaders: (Globals.DEBUG ? [
+          use: (Globals.DEBUG ? [
             {
               loader: 'file-loader',
-              query: {
+              options: {
                 name: Globals.output.media
               }
             }
           ] : [
             {
               loader: 'url-loader',
-              query: {
+              options: {
                 name: Globals.output.media,
                 limit: 12000
               }
@@ -200,13 +200,13 @@ function webpackBuilder(appConfig, envConfig) {
           ]).concat((Globals.minimize && !!appConfig.images) ? [
             {
               loader: '@bruitt/image-webpack-loader',
-              query: appConfig.images || {}
+              options: appConfig.images || {}
             }
           ] : []),
           exclude: /symbol/
         }, {
           test: /symbol(.*)\.svg$/,
-          loader: 'svg-sprite-loader'
+          use: 'svg-sprite-loader'
         }
       ]
     }
@@ -214,7 +214,8 @@ function webpackBuilder(appConfig, envConfig) {
 
   if (Globals.styles.extractCss) {
     config.plugins.push(
-      new ExtractTextPlugin(Globals.output.css, {
+      new ExtractTextPlugin({
+        filename: Globals.output.css,
         allChunks: true
       })
     )
@@ -273,7 +274,8 @@ function webpackBuilder(appConfig, envConfig) {
         output: {
           comments: false,
           screw_ie8: true
-        }
+        },
+        sourceMap: true
       }),
       new AggressiveMergingPlugin()
     )
