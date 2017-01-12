@@ -207,6 +207,9 @@ function webpackBuilder(appConfig, envConfig) {
         }, {
           test: /symbol(.*)\.svg$/,
           use: 'svg-sprite-loader'
+        }, {
+          test: /\.md$/,
+          use: "html-loader!markdown-loader"
         }
       ]
     }
