@@ -209,7 +209,10 @@ function webpackBuilder(appConfig, envConfig) {
           use: 'svg-sprite-loader'
         }, {
           test: /\.md$/,
-          use: "html-loader!markdown-loader"
+          use: [
+            { loader: 'html-loader' },
+            { loader: 'markdown-loader' }
+          ]
         }
       ]
     }
