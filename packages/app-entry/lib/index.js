@@ -16,7 +16,7 @@ import hx from '@bruitt/hyperscript/dist/react'
 
 let h = hx({})
 
-export let configureStore = (rootReducer, initialState) => {
+export let configureStore = (rootReducer, initialState, ...middlewares) => {
   if (process.env.WEBFONTLOADER) {
     loadWebFonts(process.env.WEBFONTLOADER)
   }
@@ -24,7 +24,7 @@ export let configureStore = (rootReducer, initialState) => {
   let sagaMiddleware = createSagaMiddleware()
 
   let createStoreWithMiddleware = compose(
-    applyMiddleware(sagaMiddleware)
+    applyMiddleware(...middlewares, sagaMiddleware)
   )(createStore)
 
   let getReducers = () => combineReducers(rootReducer)
