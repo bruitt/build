@@ -16,7 +16,7 @@ import hx from '@bruitt/hyperscript/dist/react'
 
 let h = hx({})
 
-export let configureStore = (rootReducer, initialState, middlewares, enhancers) => {
+export let configureStore = (rootReducer, initialState, middlewares = [], enhancers = []) => {
   if (process.env.WEBFONTLOADER) {
     loadWebFonts(process.env.WEBFONTLOADER)
   }
