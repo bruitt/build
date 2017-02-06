@@ -63,7 +63,7 @@ function webpackBuilder(appConfig, envConfig) {
       // let k = (key === 'index') ? '' : key
       let entry = appConfig.entries[key]
       let entryName = path.basename(entry, '.js')
-      if (key === 'index') {
+      if (key !== 'index') {
         envConfig.HISTORY[entryName] = { basename: `/${key}` }
       } else {
         envConfig.HISTORY[entryName] = { basename: '' }
