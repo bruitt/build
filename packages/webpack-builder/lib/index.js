@@ -58,12 +58,16 @@ function webpackBuilder(appConfig, envConfig) {
   if (!!appConfig.history) {
     envConfig.HISTORY = appConfig.history
   } else {
-    envConfig.HISTORY =  {}
+    envConfig.HISTORY = {}
     Object.keys(appConfig.entries).forEach((key) => {
-      let k = (key === 'index') ? '' : key
+      // let k = (key === 'index') ? '' : key
       let entry = appConfig.entries[key]
       let entryName = path.basename(entry, '.js')
-      envConfig.HISTORY[entryName] = { basename: `/${k}` }
+      if (key === 'index') {
+        envConfig.HISTORY[entryName] = { basename: `/${key}` }
+      } else {
+        envConfig.HISTORY[entryName] = { basename: '' }
+      }
     })
   }
 
@@ -196,7 +200,7 @@ function webpackBuilder(appConfig, envConfig) {
                 name: Globals.output.media,
                 limit: 12000
               }
-            },
+            }
           ]).concat((Globals.minimize && !!appConfig.images) ? [
             {
               loader: '@bruitt/image-webpack-loader',
