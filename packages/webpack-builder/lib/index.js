@@ -185,7 +185,7 @@ function webpackBuilder(appConfig, envConfig) {
           use: 'babel-loader',
           exclude: /node_modules/
         }, {
-          test: /\.(png|woff|woff2|eot|ttf|svg|gif|jpg|jpeg|bmp)(\?.*$|$)/,
+          test: /\.(png|woff|woff2|eot|ttf|svg|gif|jpg|jpeg|bmp|mp4|webm)(\?.*$|$)/,
           use: (Globals.DEBUG ? [
             {
               loader: 'file-loader',
