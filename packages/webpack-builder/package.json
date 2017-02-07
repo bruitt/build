@@ -1,6 +1,6 @@
 {
   "name": "@bruitt/webpack-builder",
-  "version": "3.9.4",
+  "version": "3.10.0",
   "main": "dist/index.js",
   "bin": {
     "webpack": "./node_modules/.bin/webpack",
@@ -33,7 +33,7 @@
     "babel-preset-react": "^6.16.0",
     "babel-preset-stage-0": "^6.16.0",
     "css-loader": "^0.26.0",
-    "extract-text-webpack-plugin": "^2.0.0-beta.5",
+    "extract-text-webpack-plugin": "^2.0.0-rc",
     "file-loader": "^0.9.0",
     "html-loader": "^0.4.4",
     "html-webpack-plugin": "^2.22.0",
@@ -42,6 +42,7 @@
     "postcss-loader": "^1.2.0",
     "postcss-scss": "^0.4.0",
     "react-hot-loader": "^3.0.0-beta.5",
+    "react-static-webpack-plugin": "^2.1.0",
     "stats-webpack-plugin": "^0.4.2",
     "style-loader": "^0.13.1",
     "svg-sprite-loader": "0.1.2",

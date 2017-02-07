@@ -14,6 +14,7 @@ let NamedModulesPlugin = require('webpack/lib/NamedModulesPlugin')
 let StatsPlugin = require('stats-webpack-plugin')
 let ExtractTextPlugin = require('extract-text-webpack-plugin')
 let HtmlWebpackPlugin = require('html-webpack-plugin')
+let StaticSiteGeneratorPlugin = require('react-static-webpack-plugin');
 
 let postcssBundle = require('@bruitt/postcss-bundle').default
 
@@ -28,6 +29,7 @@ Globals.devServer = Globals.DEBUG && !!argv.devServer
 Globals.commonChunks = true
 Globals.longTermCaching = !Globals.devServer
 Globals.minimize = !Globals.DEBUG
+Globals.staticGenerator = appConfig.static
 
 Globals.colors = !argv.nocolors
 
@@ -289,6 +291,10 @@ function webpackBuilder(appConfig, envConfig) {
       }),
       new AggressiveMergingPlugin()
     )
+  }
+
+  if (Globals.staticGenerator) {
+    config.plugins.push(new StaticSiteGeneratorPlugin(Globals.staticGenerator))
   }
 
   if (Globals.devServer) {
