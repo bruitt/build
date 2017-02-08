@@ -297,6 +297,7 @@ function webpackBuilder(appConfig, envConfig) {
   }
 
   if (appConfig.static) {
+    // NB: generating staic is a nice idea though that plugin totally sucks
     let StaticSiteGeneratorPlugin = require('react-static-webpack-plugin')
     config.plugins.push(new StaticSiteGeneratorPlugin(Globals.staticGenerator))
   }
