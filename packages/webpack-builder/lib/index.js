@@ -207,10 +207,8 @@ function webpackBuilder(appConfig, envConfig) {
         }, {
           test: /\.jsx?$/,
           use: 'babel-loader',
-          include: [
-            Globals.srcScriptsDir,
-            ...(appConfig.transpilePackages || []).map((p) => new RegExp(p))
-          ]
+          include: (appConfig.transpilePackages || []).map((p) => new RegExp(p)),
+          exclude: /node_modules/
         }, {
           test: /\.(png|woff|woff2|eot|ttf|svg|gif|jpg|jpeg|bmp|mp4|webm)(\?.*$|$)/,
           use: getFileLoader(),
