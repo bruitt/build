@@ -14,7 +14,6 @@ let NamedModulesPlugin = require('webpack/lib/NamedModulesPlugin')
 let StatsPlugin = require('stats-webpack-plugin')
 let ExtractTextPlugin = require('extract-text-webpack-plugin')
 let HtmlWebpackPlugin = require('html-webpack-plugin')
-let StaticSiteGeneratorPlugin = require('react-static-webpack-plugin');
 
 let postcssBundle = require('@bruitt/postcss-bundle').default
 
@@ -110,8 +109,6 @@ function webpackBuilder(appConfig, envConfig) {
 
   Globals.srcScriptsDir = path.resolve(appConfig.globals.srcScriptsDir)
   Globals.buildScriptsDir = path.resolve(appConfig.globals.buildScriptsDir)
-
-  Globals.staticGenerator = appConfig.static
 
   let localIdentName = Globals.styles.cssMangling ? '[hash:base64]'
     : Globals.styles.localIdentName || 'ns-[name]-[local]'
@@ -299,7 +296,8 @@ function webpackBuilder(appConfig, envConfig) {
     )
   }
 
-  if (Globals.staticGenerator) {
+  if (appConfig.static) {
+    let StaticSiteGeneratorPlugin = require('react-static-webpack-plugin')
     config.plugins.push(new StaticSiteGeneratorPlugin(Globals.staticGenerator))
   }
 
