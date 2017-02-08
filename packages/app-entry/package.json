@@ -18,6 +18,8 @@
     "@bruitt/hyperscript": "^1.5.0",
     "babel-polyfill": "^6.14.0",
     "normalize.css": "^4.2.0",
+    "preact": "beta",
+    "preact-compat": "^3.13.1",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
     "react-hot-loader": "^3.0.0-beta.5",
