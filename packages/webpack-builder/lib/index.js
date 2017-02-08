@@ -158,8 +158,8 @@ function webpackBuilder(appConfig, envConfig) {
     ],
 
     resolve: {
-      extensions: [ '.js', '.jsx' ],
-      ...(appConfig.resolve || {})
+      alias: appConfig.alias || {},
+      extensions: [ '.js', '.jsx', '.json' ]
     },
 
     module: {
@@ -207,7 +207,11 @@ function webpackBuilder(appConfig, envConfig) {
         }, {
           test: /\.jsx?$/,
           use: 'babel-loader',
-          exclude: /node_modules/
+          exclude: /node_modules/,
+          include: [
+            Globals.srcScriptsDir,
+            ...(appConfig.transpilePackages || []).map((p) => new RegExp(p))
+          ]
         }, {
           test: /\.(png|woff|woff2|eot|ttf|svg|gif|jpg|jpeg|bmp|mp4|webm)(\?.*$|$)/,
           use: getFileLoader(),
