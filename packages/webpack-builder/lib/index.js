@@ -207,7 +207,6 @@ function webpackBuilder(appConfig, envConfig) {
         }, {
           test: /\.jsx?$/,
           use: 'babel-loader',
-          exclude: /node_modules/,
           include: [
             Globals.srcScriptsDir,
             ...(appConfig.transpilePackages || []).map((p) => new RegExp(p))
