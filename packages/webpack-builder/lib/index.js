@@ -29,7 +29,6 @@ Globals.devServer = Globals.DEBUG && !!argv.devServer
 Globals.commonChunks = true
 Globals.longTermCaching = !Globals.devServer
 Globals.minimize = !Globals.DEBUG
-Globals.staticGenerator = appConfig.static
 
 Globals.colors = !argv.nocolors
 
@@ -50,12 +49,6 @@ process.env.TARGET = target
 process.env.NODE_ENV = Globals.DEBUG ? 'development' : 'production'
 process.env.BABEL_ENV = Globals.DEBUG ? 'development' : 'production'
 
-function getStyleLoaders({ fallbackLoader, loaders, shouldExtract }) {
-  return shouldExtract ?
-    [ ExtractTextPlugin.extract({ fallbackLoader, loader: loaders }) ] :
-    [ fallbackLoader, ...loaders ]
-}
-
 function webpackBuilder(appConfig, envConfig) {
   if (!!appConfig.history) {
     envConfig.HISTORY = appConfig.history
@@ -73,6 +66,36 @@ function webpackBuilder(appConfig, envConfig) {
     })
   }
 
+  function getStyleLoaders({ fallback, use, shouldExtract }) {
+    return shouldExtract ?
+      ExtractTextPlugin.extract({ fallback, use }) :
+      [ { loader: fallback }, ...use ]
+  }
+
+  function getFileLoader() {
+    return (Globals.DEBUG ? [
+      {
+        loader: 'file-loader',
+        options: {
+          name: Globals.output.media
+        }
+      }
+    ] : [
+      {
+        loader: 'url-loader',
+        options: {
+          name: Globals.output.media,
+          limit: 12000
+        }
+      }
+    ]).concat((Globals.minimize && !!appConfig.images) ? [
+      {
+        loader: '@bruitt/image-webpack-loader',
+        options: appConfig.images || {}
+      }
+    ] : [])
+  }
+
   envConfig.NODE_ENV = process.env.NODE_ENV
   envConfig.TARGET = process.env.TARGET
 
@@ -87,6 +110,8 @@ function webpackBuilder(appConfig, envConfig) {
 
   Globals.srcScriptsDir = path.resolve(appConfig.globals.srcScriptsDir)
   Globals.buildScriptsDir = path.resolve(appConfig.globals.buildScriptsDir)
+
+  Globals.staticGenerator = appConfig.static
 
   let localIdentName = Globals.styles.cssMangling ? '[hash:base64]'
     : Globals.styles.localIdentName || 'ns-[name]-[local]'
@@ -145,8 +170,8 @@ function webpackBuilder(appConfig, envConfig) {
         {
           test: /\.css$/,
           use: getStyleLoaders({
-            fallbackLoader: 'style-loader',
-            loaders: [
+            fallback: 'style-loader',
+            use: [
               {
                 loader: 'css-loader',
                 options: {
@@ -164,8 +189,8 @@ function webpackBuilder(appConfig, envConfig) {
         }, {
           test: /\.pcss$/,
           use: getStyleLoaders({
-            fallbackLoader: 'style-loader',
-            loaders: [
+            fallback: 'style-loader',
+            use: [
               {
                 loader: 'css-loader',
                 options: {
@@ -188,27 +213,7 @@ function webpackBuilder(appConfig, envConfig) {
           exclude: /node_modules/
         }, {
           test: /\.(png|woff|woff2|eot|ttf|svg|gif|jpg|jpeg|bmp|mp4|webm)(\?.*$|$)/,
-          use: (Globals.DEBUG ? [
-            {
-              loader: 'file-loader',
-              options: {
-                name: Globals.output.media
-              }
-            }
-          ] : [
-            {
-              loader: 'url-loader',
-              options: {
-                name: Globals.output.media,
-                limit: 12000
-              }
-            }
-          ]).concat((Globals.minimize && !!appConfig.images) ? [
-            {
-              loader: '@bruitt/image-webpack-loader',
-              options: appConfig.images || {}
-            }
-          ] : []),
+          use: getFileLoader(),
           exclude: /symbol/
         }, {
           test: /symbol(.*)\.svg$/,
@@ -222,15 +227,6 @@ function webpackBuilder(appConfig, envConfig) {
         }
       ]
     }
-  }
-
-  if (Globals.styles.extractCss) {
-    config.plugins.push(
-      new ExtractTextPlugin({
-        filename: Globals.output.css,
-        allChunks: true
-      })
-    )
   }
 
   if (Globals.commonChunks && Array.isArray(appConfig.commons)) {
@@ -271,6 +267,16 @@ function webpackBuilder(appConfig, envConfig) {
       }, item))
     })
     config.plugins = config.plugins.concat(htmlPlugins)
+  }
+
+  if (Globals.styles.extractCss) {
+    config.plugins.push(
+      new ExtractTextPlugin({
+        filename: Globals.output.css,
+        allChunks: true,
+        ignoreOrder: true
+      })
+    )
   }
 
   if (Globals.minimize) {
