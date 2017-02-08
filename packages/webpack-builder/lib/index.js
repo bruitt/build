@@ -158,6 +158,7 @@ function webpackBuilder(appConfig, envConfig) {
     ],
 
     resolve: {
+      alias: { appConfig.alias },
       modules: [ Globals.srcScriptsDir, 'node_modules' ],
       extensions: [ '.js', '.jsx' ]
     },
