@@ -7,6 +7,10 @@ export default browsers => () => [
   postcssAssets,
   postcssCssnext({
     browsers,
-    url: false
+    features: {
+      autoprefixer: {
+        flexbox: 'no-2009'
+      }
+    }
   })
 ]
