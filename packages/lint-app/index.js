@@ -25,8 +25,5 @@ module.exports = {
         ]
       }
     ]
-  },
-  globals: {
-    'R': false
   }
 }
