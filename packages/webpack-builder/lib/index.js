@@ -6,7 +6,6 @@ let UglifyJsPlugin = require('webpack/lib/optimize/UglifyJsPlugin')
 
 let CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin')
 let DefinePlugin = require('webpack/lib/DefinePlugin')
-let ProvidePlugin = require('webpack/lib/ProvidePlugin')
 let LoaderOptionsPlugin = require('webpack/lib/LoaderOptionsPlugin')
 let NoErrorsPlugin = require('webpack/lib/NoErrorsPlugin')
 let NamedModulesPlugin = require('webpack/lib/NamedModulesPlugin')
@@ -48,8 +47,10 @@ process.env.TARGET = target
 process.env.NODE_ENV = Globals.DEBUG ? 'development' : 'production'
 process.env.BABEL_ENV = Globals.DEBUG ? 'development' : 'production'
 
-function webpackBuilder(appConfig, envConfig) {
-  if (!!appConfig.history) {
+function webpackBuilder(appConfig, env) {
+  let envConfig = { ...env }
+
+  if (appConfig.history) {
     envConfig.HISTORY = appConfig.history
   } else {
     envConfig.HISTORY = {}
@@ -68,7 +69,9 @@ function webpackBuilder(appConfig, envConfig) {
   function getStyleLoaders({ fallback, use, shouldExtract }) {
     return shouldExtract ?
       ExtractTextPlugin.extract({ fallback, use }) :
-      [ { loader: fallback }, ...use ]
+    [
+      { loader: fallback }, ...use
+    ]
   }
 
   function getFileLoader() {
@@ -142,9 +145,6 @@ function webpackBuilder(appConfig, envConfig) {
           postcss: postcssBundle(Globals.styles.browserStack || '')
         }
       }),
-      new ProvidePlugin({
-        R: 'ramda'
-      }),
       new DefinePlugin({
         'process.env': processEnv
       }),
@@ -158,8 +158,7 @@ function webpackBuilder(appConfig, envConfig) {
     ],
 
     resolve: {
-      alias: appConfig.alias || {},
-      extensions: [ '.js', '.jsx', '.json' ]
+      alias: appConfig.alias || {}
     },
 
     module: {
@@ -205,12 +204,14 @@ function webpackBuilder(appConfig, envConfig) {
             shouldExtract: Globals.styles.extractCss
           })
         }, {
-          test: /\.jsx?$/,
           use: 'babel-loader',
-          or: [
-            { include: (appConfig.transpilePackages || []).map((p) => new RegExp(p)) },
-            { exclude: /node_modules/ }
-          ]
+          resource: {
+            test: /\.jsx?$/,
+            or: [
+              { include: (appConfig.transpilePackages || []).map((p) => new RegExp(p)) },
+              { exclude: /node_modules/ }
+            ]
+          }
         }, {
           test: /\.(png|woff|woff2|eot|ttf|svg|gif|jpg|jpeg|bmp|mp4|webm)(\?.*$|$)/,
           use: getFileLoader(),
@@ -297,12 +298,6 @@ function webpackBuilder(appConfig, envConfig) {
       }),
       new AggressiveMergingPlugin()
     )
-  }
-
-  if (appConfig.static) {
-    // NB: generating staic is a nice idea though that plugin totally sucks
-    let StaticSiteGeneratorPlugin = require('react-static-webpack-plugin')
-    config.plugins.push(new StaticSiteGeneratorPlugin(Globals.staticGenerator))
   }
 
   if (Globals.devServer) {
