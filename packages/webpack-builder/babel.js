@@ -1,6 +1,12 @@
 var preset = {
   presets: [
-    [ require("babel-preset-es2015").buildPreset, { "modules": false } ],
+    [
+      require("babel-preset-env"),
+      {
+        "modules": false,
+        "useBuiltIns": true
+      }
+    ],
     require("babel-preset-stage-0"),
     require("babel-preset-react")
   ],

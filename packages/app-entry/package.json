@@ -3,8 +3,7 @@
   "version": "2.0.0",
   "main": "dist/index.js",
   "scripts": {
-    "build": "babel lib -d dist && cp lib/reset.pcss dist",
-    "prepublish": "BABEL_ENV=production npm run build",
+    "check-ver": "npm-check --skip-unused",
     "lint": "eslint ./lib",
     "postinstall": "mkdir -p ./node_modules/@bruitt && ln -sfn $(pwd) ./node_modules/@bruitt/app-entry"
   },
@@ -25,12 +24,13 @@
     "react-hot-loader": "^3.0.0-beta.5",
     "react-redux": "^5.0.2",
     "redux": "^3.6.0",
-    "webfontloader": "^1.6.26"
+    "webfontloader": "^1.6.27"
   },
   "devDependencies": {
     "@bruitt/eslint-config-lint-base": "^2.1.1",
     "babel-cli": "^6.22.0",
     "babel-core": "^6.22.0",
-    "babel-preset-bruitt-lib": "^1.1.0"
+    "babel-preset-bruitt-lib": "^1.1.0",
+    "npm-check": "^5.4.0"
   }
 }
