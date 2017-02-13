@@ -21,6 +21,26 @@ module.exports = {
     "vars-on-top": "off",
 
     "import/no-extraneous-dependencies": [ "off" ],
-    "import/no-mutable-exports": "off"
+    "import/no-mutable-exports": "off",
+
+    "fp/no-arguments": "error",
+    "fp/no-delete": "error",
+    "fp/no-events": "error",
+    "fp/no-get-set": "error",
+    "fp/no-loops": "error",
+    "fp/no-mutating-assign": "error",
+    "fp/no-mutating-methods": "error",
+    "fp/no-proxy": "error",
+    "fp/no-rest-parameters": "error",
+    "fp/no-throw": "error",
+    "fp/no-valueof-field": "error",
+
+    // muted
+    "fp/no-class": "off",
+    "fp/no-let": "off",
+    "fp/no-mutation": "off",
+    "fp/no-nil": "off",
+    "fp/no-this": "off",
+    "fp/no-unused-expression": "off",
   }
 }
