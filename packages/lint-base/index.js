@@ -3,6 +3,9 @@ module.exports = {
     "eslint-config-airbnb-base",
     "eslint-config-airbnb-base/rules/strict"
   ].map(require.resolve),
+  plugins: [
+    "fp"
+  ],
   rules: {
     "arrow-body-style": [ "off", "as-needed" ],
     "array-bracket-spacing": [ "error", "always", { "objectsInArrays": false, "arraysInArrays": false } ],
@@ -27,6 +30,7 @@ module.exports = {
     "fp/no-delete": "error",
     "fp/no-events": "error",
     "fp/no-get-set": "error",
+    "fp/no-let": "off",
     "fp/no-loops": "error",
     "fp/no-mutating-assign": "error",
     "fp/no-mutating-methods": "error",
@@ -37,7 +41,6 @@ module.exports = {
 
     // muted
     "fp/no-class": "off",
-    "fp/no-let": "off",
     "fp/no-mutation": "off",
     "fp/no-nil": "off",
     "fp/no-this": "off",
