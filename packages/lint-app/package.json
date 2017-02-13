@@ -2,9 +2,6 @@
   "name": "@bruitt/eslint-config-lint-app",
   "version": "1.0.0",
   "main": "index.js",
-  "bin": {
-    "stylelint": "./node_modules/.bin/stylelint"
-  },
   "scripts": {
     "postinstall": "mkdir -p ./node_modules/@bruitt && ln -sfn $(pwd) ./node_modules/@bruitt/eslint-config-lint-app"
   },
