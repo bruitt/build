@@ -1,6 +1,6 @@
 {
   "parser": "babel-eslint",
-  "extends": "@bruitt/lint-lib",
+  "extends": "@bruitt/lint-base",
   "env": {
     "node": true
   }
