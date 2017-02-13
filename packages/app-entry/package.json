@@ -1,6 +1,6 @@
 {
   "name": "@bruitt/app-entry",
-  "version": "2.0.0",
+  "version": "4.0.2",
   "main": "dist/index.js",
   "scripts": {
     "check-ver": "npm-check --skip-unused",
