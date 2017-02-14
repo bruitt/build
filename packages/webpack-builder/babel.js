@@ -1,12 +1,19 @@
-var preset = {
+let presetEnv = {
+  modules: false,
+  exclude: [
+    "es7.string.pad-start",
+    "es7.string.pad-end"
+  ],
+  useBuiltIns: true
+}
+
+if (process.env.BROWSERSLIST) {
+  presetEnv.target = { browsers: process.env.BROWSERSLIST }
+}
+
+let preset = {
   presets: [
-    [
-      require("babel-preset-env"),
-      {
-        "modules": false,
-        "useBuiltIns": true
-      }
-    ],
+    [ require("babel-preset-env"), presetEnv ],
     require("babel-preset-stage-0"),
     require("babel-preset-react")
   ],
@@ -24,4 +31,4 @@ if (process.env.NODE_ENV === "production") {
   preset.plugins.push(require("babel-plugin-typecheck").default)
 }
 
-module.exports = preset;
+module.exports = preset

@@ -1,27 +1,27 @@
-let minimist = require('minimist')
-let path = require('path')
+let minimist = require("minimist")
+let path = require("path")
 
-let AggressiveMergingPlugin = require('webpack/lib/optimize/AggressiveMergingPlugin')
-let UglifyJsPlugin = require('webpack/lib/optimize/UglifyJsPlugin')
+let AggressiveMergingPlugin = require("webpack/lib/optimize/AggressiveMergingPlugin")
+let UglifyJsPlugin = require("webpack/lib/optimize/UglifyJsPlugin")
 
-let CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin')
-let DefinePlugin = require('webpack/lib/DefinePlugin')
-let LoaderOptionsPlugin = require('webpack/lib/LoaderOptionsPlugin')
-let NoErrorsPlugin = require('webpack/lib/NoErrorsPlugin')
-let NamedModulesPlugin = require('webpack/lib/NamedModulesPlugin')
+let CommonsChunkPlugin = require("webpack/lib/optimize/CommonsChunkPlugin")
+let DefinePlugin = require("webpack/lib/DefinePlugin")
+let LoaderOptionsPlugin = require("webpack/lib/LoaderOptionsPlugin")
+let NoErrorsPlugin = require("webpack/lib/NoErrorsPlugin")
+let NamedModulesPlugin = require("webpack/lib/NamedModulesPlugin")
 
-let StatsPlugin = require('stats-webpack-plugin')
-let ExtractTextPlugin = require('extract-text-webpack-plugin')
-let HtmlWebpackPlugin = require('html-webpack-plugin')
+let StatsPlugin = require("stats-webpack-plugin")
+let ExtractTextPlugin = require("extract-text-webpack-plugin")
+let HtmlWebpackPlugin = require("html-webpack-plugin")
 
-let postcssBundle = require('@bruitt/postcss-bundle').default
+let postcssBundle = require("@bruitt/postcss-bundle").default
 
 let argv = minimist(process.argv.slice(2)).env || {}
-let target = process.env.TARGET || process.env.NODE_ENV || 'development'
+let target = process.env.TARGET || process.env.NODE_ENV || "development"
 
 let Globals = {}
 
-Globals.DEBUG = (target === 'development')
+Globals.DEBUG = (target === "development")
 
 Globals.devServer = Globals.DEBUG && !!argv.devServer
 Globals.commonChunks = true
@@ -31,21 +31,21 @@ Globals.minimize = !Globals.DEBUG
 Globals.colors = !argv.nocolors
 
 Globals.devServerPort = 3808
-Globals.publicPath = '/'
+Globals.publicPath = "/"
 
 Globals.styles = {}
 Globals.styles.extractCss = Globals.longTermCaching && !Globals.DEBUG
 Globals.styles.cssMangling = !Globals.DEBUG
-Globals.styles.localIdentName = 'ns-[name]-[local]'
+Globals.styles.localIdentName = "ns-[name]-[local]"
 
 Globals.output = {}
-Globals.output.js = 'assets/js/[name].[chunkhash].js'
-Globals.output.css = 'assets/css/[name].[contenthash].css'
-Globals.output.media = 'assets/media/[name].[hash].[ext]'
+Globals.output.js = "assets/js/[name].[chunkhash].js"
+Globals.output.css = "assets/css/[name].[contenthash].css"
+Globals.output.media = "assets/media/[name].[hash].[ext]"
 
 process.env.TARGET = target
-process.env.NODE_ENV = Globals.DEBUG ? 'development' : 'production'
-process.env.BABEL_ENV = Globals.DEBUG ? 'development' : 'production'
+process.env.NODE_ENV = Globals.DEBUG ? "development" : "production"
+process.env.BABEL_ENV = Globals.DEBUG ? "development" : "production"
 
 function webpackBuilder(appConfig, env) {
   let envConfig = { ...env }
@@ -55,13 +55,13 @@ function webpackBuilder(appConfig, env) {
   } else {
     envConfig.HISTORY = {}
     Object.keys(appConfig.entries).forEach((key) => {
-      // let k = (key === 'index') ? '' : key
+      // let k = (key === "index") ? "" : key
       let entry = appConfig.entries[key]
-      let entryName = path.basename(entry, '.js')
-      if (key !== 'index') {
+      let entryName = path.basename(entry, ".js")
+      if (key !== "index") {
         envConfig.HISTORY[entryName] = { basename: `/${key}` }
       } else {
-        envConfig.HISTORY[entryName] = { basename: '' }
+        envConfig.HISTORY[entryName] = { basename: "" }
       }
     })
   }
@@ -69,32 +69,30 @@ function webpackBuilder(appConfig, env) {
   function getStyleLoaders({ fallback, use, shouldExtract }) {
     return shouldExtract ?
       ExtractTextPlugin.extract({ fallback, use }) :
-    [
-      { loader: fallback }, ...use
-    ]
+      [ { loader: fallback }, ...use ]
   }
 
   function getFileLoader() {
     return (Globals.DEBUG ? [
       {
-        loader: 'file-loader',
-        options: {
-          name: Globals.output.media
-        }
-      }
-    ] : [
-      {
-        loader: 'url-loader',
+        loader: "file-loader",
         options: {
           name: Globals.output.media,
-          limit: 12000
-        }
-      }
+        },
+      },
+    ] : [
+      {
+        loader: "url-loader",
+        options: {
+          name: Globals.output.media,
+          limit: 12000,
+        },
+      },
     ]).concat((Globals.minimize && !!appConfig.images) ? [
       {
-        loader: '@bruitt/image-webpack-loader',
-        options: appConfig.images || {}
-      }
+        loader: "@bruitt/image-webpack-loader",
+        options: appConfig.images || {},
+      },
     ] : [])
   }
 
@@ -110,11 +108,14 @@ function webpackBuilder(appConfig, env) {
   Globals.styles = Object.assign({}, Globals.styles, appConfig.styles)
   Globals.output = Object.assign({}, Globals.output, appConfig.output)
 
+  Globals.browserslist = appConfig.browserslist || [ "> 1%", "IE 11" ]
+  process.env.BROWSERSLIST = Globals.browserslist
+
   Globals.srcScriptsDir = path.resolve(appConfig.globals.srcScriptsDir)
   Globals.buildScriptsDir = path.resolve(appConfig.globals.buildScriptsDir)
 
-  let localIdentName = Globals.styles.cssMangling ? '[hash:base64]'
-    : Globals.styles.localIdentName || 'ns-[name]-[local]'
+  let localIdentName = Globals.styles.cssMangling ? "[hash:base64]"
+    : Globals.styles.localIdentName || "ns-[name]-[local]"
 
   let config = {
     cache: Globals.DEBUG,
@@ -122,19 +123,19 @@ function webpackBuilder(appConfig, env) {
     entry: appConfig.entries,
 
     devtool: Globals.DEBUG ?
-      'cheap-module-source-map' :
-      'module-hidden-source-map',
+      "cheap-module-source-map" :
+      "module-hidden-source-map",
 
     output: {
       path: Globals.buildScriptsDir,
       publicPath: Globals.publicPath,
       filename: Globals.longTermCaching ? Globals.output.js :
-        Globals.output.js.replace('.[chunkhash]', '')
+        Globals.output.js.replace(".[chunkhash]", ""),
     },
 
     stats: {
       colors: Globals.colors,
-      reasons: Globals.DEBUG
+      reasons: Globals.DEBUG,
     },
 
     plugins: [
@@ -142,23 +143,23 @@ function webpackBuilder(appConfig, env) {
         debug: Globals.DEBUG,
         minimize: Globals.MINIMIZE,
         options: {
-          postcss: postcssBundle(Globals.styles.browserStack || '')
-        }
+          postcss: postcssBundle(Globals.browserslist),
+        },
       }),
       new DefinePlugin({
-        'process.env': processEnv
+        "process.env": processEnv,
       }),
-      new StatsPlugin('manifest.json', {
+      new StatsPlugin("manifest.json", {
         chunkModules: false,
         source: false,
         chunks: false,
         modules: false,
-        assets: true
-      })
+        assets: true,
+      }),
     ],
 
     resolve: {
-      alias: appConfig.alias || {}
+      alias: appConfig.alias || {},
     },
 
     module: {
@@ -166,68 +167,68 @@ function webpackBuilder(appConfig, env) {
         {
           test: /\.css$/,
           use: getStyleLoaders({
-            fallback: 'style-loader',
+            fallback: "style-loader",
             use: [
               {
-                loader: 'css-loader',
+                loader: "css-loader",
                 options: {
-                  importLoaders: 1
-                }
+                  importLoaders: 1,
+                },
               }, {
-                loader: 'postcss-loader',
+                loader: "postcss-loader",
                 options: {
-                  parser: 'postcss-scss'
-                }
-              }
+                  parser: "postcss-scss",
+                },
+              },
             ],
-            shouldExtract: Globals.styles.extractCss
-          })
+            shouldExtract: Globals.styles.extractCss,
+          }),
         }, {
           test: /\.pcss$/,
           use: getStyleLoaders({
-            fallback: 'style-loader',
+            fallback: "style-loader",
             use: [
               {
-                loader: 'css-loader',
+                loader: "css-loader",
                 options: {
                   importLoaders: 1,
                   modules: true,
-                  localIdentName
-                }
+                  localIdentName,
+                },
               }, {
-                loader: 'postcss-loader',
+                loader: "postcss-loader",
                 options: {
-                  parser: 'postcss-scss'
-                }
-              }
+                  parser: "postcss-scss",
+                },
+              },
             ],
-            shouldExtract: Globals.styles.extractCss
-          })
+            shouldExtract: Globals.styles.extractCss,
+          }),
         }, {
-          use: 'babel-loader',
+          use: "babel-loader",
           resource: {
             test: /\.jsx?$/,
             or: [
               { include: (appConfig.transpilePackages || []).map((p) => new RegExp(p)) },
-              { exclude: /node_modules/ }
-            ]
-          }
+              { exclude: /node_modules/ },
+            ],
+          },
         }, {
           test: /\.(png|woff|woff2|eot|ttf|svg|gif|jpg|jpeg|bmp|mp4|webm)(\?.*$|$)/,
           use: getFileLoader(),
-          exclude: /symbol/
+          exclude: /symbol/,
         }, {
           test: /symbol(.*)\.svg$/,
-          use: 'svg-sprite-loader'
+          use: "svg-sprite-loader",
         }, {
           test: /\.md$/,
           use: [
-            { loader: 'html-loader' },
-            { loader: 'markdown-loader' }
-          ]
-        }
-      ]
-    }
+            { loader: "html-loader" },
+            { loader: "markdown-loader" },
+          ],
+        },
+      ],
+    },
   }
 
   if (Globals.commonChunks && Array.isArray(appConfig.commons)) {
@@ -241,11 +242,11 @@ function webpackBuilder(appConfig, env) {
 
   if (!!htmls && !Array.isArray(htmls) && !!htmls.template) {
     htmls = Object.keys(appConfig.entries).map((key) => {
-      // let k = (key === 'index') ? '' : key
+      // let k = (key === "index") ? "" : key
       return {
         template: htmls.template,
         filename: `${key}.html`,
-        chunks: [ key ]
+        chunks: [ key ],
       }
     })
   }
@@ -263,8 +264,8 @@ function webpackBuilder(appConfig, env) {
           keepClosingSlash: true,
           minifyJS: true,
           minifyCSS: true,
-          minifyURLs: true
-        }
+          minifyURLs: true,
+        },
       }, item))
     })
     config.plugins = config.plugins.concat(htmlPlugins)
@@ -275,8 +276,8 @@ function webpackBuilder(appConfig, env) {
       new ExtractTextPlugin({
         filename: Globals.output.css,
         allChunks: true,
-        ignoreOrder: true
-      })
+        ignoreOrder: true,
+      }),
     )
   }
 
@@ -285,26 +286,26 @@ function webpackBuilder(appConfig, env) {
       new UglifyJsPlugin({
         compress: {
           screw_ie8: true,
-          warnings: false
+          warnings: false,
         },
         mangle: {
-          screw_ie8: true
+          screw_ie8: true,
         },
         output: {
           comments: false,
-          screw_ie8: true
+          screw_ie8: true,
         },
-        sourceMap: true
+        sourceMap: true,
       }),
-      new AggressiveMergingPlugin()
+      new AggressiveMergingPlugin(),
     )
   }
 
   if (Globals.devServer) {
     config.devServer = {
       port: Globals.devServerPort,
-      headers: { 'Access-Control-Allow-Origin': '*' },
-      historyApiFallback: true
+      headers: { "Access-Control-Allow-Origin": "*" },
+      historyApiFallback: true,
     }
 
     config.plugins.push(new NoErrorsPlugin())
@@ -318,10 +319,10 @@ function webpackBuilder(appConfig, env) {
       config.devServer.historyApiFallback = appConfig.historyApiFallback
     } else {
       let rewrites = Object.keys(appConfig.entries).map((key) => {
-        // let k = (key === 'index') ? '' : key
+        // let k = (key === "index") ? "" : key
         return {
           from: new RegExp(`/${key}`),
-          to: `/${key}.html`
+          to: `/${key}.html`,
         }
       })
       config.devServer.historyApiFallback = { rewrites }

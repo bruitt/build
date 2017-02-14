@@ -1,7 +1,7 @@
 {
   "name": "@bruitt/app-entry",
   "version": "4.0.2",
-  "main": "dist/index.js",
+  "main": "lib/index.js",
   "scripts": {
     "check-ver": "npm-check --skip-unused",
     "lint": "eslint ./lib",
@@ -28,9 +28,6 @@
   },
   "devDependencies": {
     "@bruitt/eslint-config-lint-base": "^2.1.1",
-    "babel-cli": "^6.22.0",
-    "babel-core": "^6.22.0",
-    "babel-preset-bruitt-lib": "^1.1.0",
     "npm-check": "^5.4.0"
   }
 }
