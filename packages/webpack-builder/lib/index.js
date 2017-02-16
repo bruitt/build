@@ -36,13 +36,26 @@ Globals.publicPath = "/"
 
 Globals.styles = {}
 Globals.styles.extractCss = Globals.longTermCaching && !Globals.DEBUG
-Globals.styles.cssMangling = !Globals.DEBUG
+// Globals.styles.cssMangling = !Globals.DEBUG
+Globals.styles.cssMangling = false
 Globals.styles.localIdentName = "ns-[name]-[local]"
 
 Globals.output = {}
 Globals.output.js = "assets/js/[name].[chunkhash].js"
 Globals.output.css = "assets/css/[name].[contenthash].css"
 Globals.output.media = "assets/media/[name].[hash].[ext]"
+
+Globals.images = {
+  optipng: { optimizationLevel: 7 },
+  gifsicle: { interlaced: false },
+  pngquant: {
+    quality: "65-90",
+    speed: 4,
+  },
+  mozjpeg: { quality: 77 },
+}
+
+Globals.transpilePackages = [ "@bruitt/app-entry", "preact-compat" ]
 
 process.env.TARGET = target
 process.env.NODE_ENV = Globals.DEBUG ? "development" : "production"
@@ -92,7 +105,7 @@ function webpackBuilder(appConfig, env) {
     ]).concat((Globals.minimize && !!appConfig.images) ? [
       {
         loader: "image-webpack-loader",
-        options: appConfig.images || {},
+        options: Globals.images,
       },
     ] : [])
   }
@@ -108,6 +121,12 @@ function webpackBuilder(appConfig, env) {
   Globals = Object.assign({}, Globals, appConfig.globals)
   Globals.styles = Object.assign({}, Globals.styles, appConfig.styles)
   Globals.output = Object.assign({}, Globals.output, appConfig.output)
+  Globals.images = Object.assign({}, Globals.images, appConfig.images)
+  Globals.transpilePackages = Object.assign(
+    {},
+    Globals.transpilePackages,
+    appConfig.transpilePackages,
+  )
 
   Globals.browserslist = appConfig.browserslist || [ "> 1%", "IE 11" ]
   process.env.BROWSERSLIST = Globals.browserslist
@@ -212,7 +231,7 @@ function webpackBuilder(appConfig, env) {
           resource: {
             test: /\.jsx?$/,
             or: [
-              { include: (appConfig.transpilePackages || []).map((p) => new RegExp(p)) },
+              { include: (Globals.transpilePackages || []).map((p) => new RegExp(p)) },
               { exclude: /node_modules/ },
             ],
           },
