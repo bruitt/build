@@ -205,12 +205,14 @@ function webpackBuilder(appConfig, envConfig) {
             shouldExtract: Globals.styles.extractCss
           })
         }, {
-          test: /\.jsx?$/,
           use: 'babel-loader',
-          or: [
-            { include: (appConfig.transpilePackages || []).map((p) => new RegExp(p)) },
-            { exclude: /node_modules/ }
-          ]
+          resource: {
+            test: /\.jsx?$/,
+            or: [
+              { include: (appConfig.transpilePackages || []).map((p) => new RegExp(p)) },
+              { exclude: /node_modules/ }
+            ],
+          }
         }, {
           test: /\.(png|woff|woff2|eot|ttf|svg|gif|jpg|jpeg|bmp|mp4|webm)(\?.*$|$)/,
           use: getFileLoader(),
