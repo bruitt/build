@@ -4,17 +4,13 @@ import "normalize.css/normalize.css"
 import "./reset.pcss"
 
 /* eslint-disable */
-import { createElement as h } from 'react'
-import { render } from 'react-dom'
-import { AppContainer } from 'react-hot-loader'
-import { Provider } from 'react-redux'
-import { combineReducers, createStore, applyMiddleware, compose } from 'redux'
-import { load as loadWebFonts } from 'webfontloader'
-
-// import hx from '@bruitt/hyperscript/dist/react'
+import { createElement as h } from "react"
+import { render } from "react-dom"
+import { AppContainer } from "react-hot-loader"
+import { Provider } from "react-redux"
+import { combineReducers, createStore, applyMiddleware, compose } from "redux"
+import { load as loadWebFonts } from "webfontloader"
 /* eslint-enable */
-
-// let h = hx({})
 
 export let configureStore = (rootReducer, initialState, middlewares = [], enhancers = []) => {
   if (process.env.WEBFONTLOADER) {

@@ -122,7 +122,7 @@ function webpackBuilder(appConfig, env) {
   Globals.styles = Object.assign({}, Globals.styles, appConfig.styles)
   Globals.output = Object.assign({}, Globals.output, appConfig.output)
   Globals.images = Object.assign({}, Globals.images, appConfig.images)
-  Globals.transpilePackages = Globals.transpilePackages.concat(appConfig.transpilePackages)
+  Globals.transpilePackages = Globals.transpilePackages.concat(appConfig.transpilePackages || [])
 
   Globals.browserslist = appConfig.browserslist || [ "> 1%", "IE 11" ]
   process.env.BROWSERSLIST = Globals.browserslist
