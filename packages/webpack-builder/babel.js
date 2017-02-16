@@ -8,7 +8,7 @@ let presetEnv = {
 }
 
 if (process.env.BROWSERSLIST) {
-  presetEnv.target = { browsers: process.env.BROWSERSLIST }
+  presetEnv.target = { browsers: process.env.BROWSERSLIST.split(',') }
 }
 
 let preset = {

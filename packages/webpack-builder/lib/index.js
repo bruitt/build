@@ -13,6 +13,7 @@ let NamedModulesPlugin = require("webpack/lib/NamedModulesPlugin")
 let StatsPlugin = require("stats-webpack-plugin")
 let ExtractTextPlugin = require("extract-text-webpack-plugin")
 let HtmlWebpackPlugin = require("html-webpack-plugin")
+let PrerenderSpaPlugin = require("prerender-spa-plugin")
 
 let postcssBundle = require("@bruitt/postcss-bundle").default
 
@@ -173,6 +174,7 @@ function webpackBuilder(appConfig, env) {
                 loader: "css-loader",
                 options: {
                   importLoaders: 1,
+                  minimize: Globals.minimize,
                 },
               }, {
                 loader: "postcss-loader",
@@ -192,6 +194,7 @@ function webpackBuilder(appConfig, env) {
                 loader: "css-loader",
                 options: {
                   importLoaders: 1,
+                  minimize: Globals.minimize,
                   modules: true,
                   localIdentName,
                 },
@@ -299,6 +302,22 @@ function webpackBuilder(appConfig, env) {
       }),
       new AggressiveMergingPlugin(),
     )
+  }
+
+  if (appConfig.prerender) {
+    config.plugins.push(new PrerenderSpaPlugin(
+      Globals.buildScriptsDir,
+      appConfig.prerender.routes || [ "/" ],
+      Object.assign({}, appConfig.prerender.options, {
+        postProcessHtml: (context) => {
+          return context.html.replace(
+            /<span aria-hidden="true"[^>]*>[^<]*<\/span>/gi, "",
+          ).replace(
+            /<style type="text\/css"[^>]*>[^<]*[.tk-|typekit][^<]*<\/style>/gi, "",
+          )
+        },
+      }),
+    ))
   }
 
   if (Globals.devServer) {
