@@ -4,6 +4,7 @@ module.exports = {
     "eslint-config-airbnb-base/rules/strict"
   ].map(require.resolve),
   plugins: [
+    "babel",
     "fp"
   ],
   rules: {
@@ -20,7 +21,7 @@ module.exports = {
     "prefer-const": "off",
     "prefer-template": "warn",
     "quotes": [ "error", "double" ],
-    "semi": [ "error", "never" ],
+    "babel/semi": [ "error", "never" ],
     "vars-on-top": "off",
 
     "import/no-extraneous-dependencies": [ "off" ],
