@@ -21,6 +21,7 @@ module.exports = {
     "prefer-const": "off",
     "prefer-template": "warn",
     "quotes": [ "error", "double" ],
+    "semi": "off",
     "babel/semi": [ "error", "never" ],
     "vars-on-top": "off",
 
