@@ -5,9 +5,6 @@
   "bin": {
     "stylelint": "./node_modules/.bin/stylelint"
   },
-  "scripts": {
-    "postinstall": "mkdir -p ./node_modules/@bruitt && ln -sfn $(pwd) ./node_modules/@bruitt/eslint-config-lint-app"
-  },
   "repository": {
     "url": "git@github.com:bruitt/build.git",
     "type": "git"

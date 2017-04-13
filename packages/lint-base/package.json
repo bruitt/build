@@ -6,9 +6,6 @@
     "eslint": "./node_modules/.bin/eslint",
     "lint-staged": "./node_modules/.bin/lint-staged"
   },
-  "scripts": {
-    "postinstall": "mkdir -p ./node_modules/@bruitt && ln -sfn $(pwd) ./node_modules/@bruitt/eslint-config-lint-base"
-  },
   "repository": {
     "url": "git@github.com:bruitt/build.git",
     "type": "git"

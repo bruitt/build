@@ -5,8 +5,7 @@
   "scripts": {
     "build": "babel lib -d dist && cp lib/reset.pcss dist",
     "prepublish": "BABEL_ENV=production npm run build",
-    "lint": "eslint ./lib",
-    "postinstall": "mkdir -p ./node_modules/@bruitt && ln -sfn $(pwd) ./node_modules/@bruitt/app-entry"
+    "lint": "eslint ./lib"
   },
   "repository": {
     "type": "git",

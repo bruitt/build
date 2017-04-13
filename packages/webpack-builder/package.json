@@ -9,8 +9,7 @@
   "scripts": {
     "build": "babel lib -d dist",
     "prepublish": "BABEL_ENV=production npm run build",
-    "lint": "eslint ./lib",
-    "postinstall": "mkdir -p ./node_modules/@bruitt && ln -sfn $(pwd) ./node_modules/@bruitt/webpack-builder"
+    "lint": "eslint ./lib"
   },
   "repository": {
     "type": "git",
