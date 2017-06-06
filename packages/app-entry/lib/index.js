@@ -1,11 +1,10 @@
 import "react-hot-loader/patch"
-import "babel-polyfill"
+// import "babel-polyfill"
 import "normalize.css/normalize.css"
 import "./reset.pcss"
 
 /* eslint-disable */
-import { createElement as h } from "react"
-import { render } from "react-dom"
+import { h, render } from "preact"
 import { AppContainer } from "react-hot-loader"
 import { Provider } from "react-redux"
 import { combineReducers, createStore, applyMiddleware, compose } from "redux"
