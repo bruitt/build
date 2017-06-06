@@ -225,12 +225,12 @@ function webpackBuilder(appConfig, env) {
             shouldExtract: Globals.styles.extractCss,
           }),
         }, {
-          use: [
+          use: [{
             loader: "awesome-typescript-loader",
             options: {
               silent: Globals.silent,
             },
-          ],
+          }],
           resource: {
             test: /\.(js|ts|jsx|tsx)?$/,
             or: [
