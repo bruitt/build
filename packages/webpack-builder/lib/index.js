@@ -14,6 +14,7 @@ let StatsPlugin = require("stats-webpack-plugin")
 let ExtractTextPlugin = require("extract-text-webpack-plugin")
 let HtmlWebpackPlugin = require("html-webpack-plugin")
 let PrerenderSpaPlugin = require("prerender-spa-plugin")
+let { CheckerPlugin } = require("awesome-typescript-loader")
 
 let postcssBundle = require("@bruitt/postcss-bundle").default
 
@@ -54,8 +55,6 @@ Globals.images = {
   },
   mozjpeg: { quality: 77 },
 }
-
-Globals.transpilePackages = [ "@bruitt/app-entry", "preact-compat" ]
 
 process.env.TARGET = target
 process.env.NODE_ENV = Globals.DEBUG ? "development" : "production"
@@ -155,6 +154,7 @@ function webpackBuilder(appConfig, env) {
     },
 
     plugins: [
+      new CheckerPlugin(),
       new LoaderOptionsPlugin({
         debug: Globals.DEBUG,
         minimize: Globals.MINIMIZE,
@@ -176,6 +176,7 @@ function webpackBuilder(appConfig, env) {
 
     resolve: {
       alias: appConfig.alias || {},
+      extensions: [ ".ts", ".tsx", ".js", ".jsx" ]
     },
 
     module: {
@@ -223,13 +224,17 @@ function webpackBuilder(appConfig, env) {
             shouldExtract: Globals.styles.extractCss,
           }),
         }, {
-          use: "babel-loader",
+          use: "awesome-typescript-loader",
           resource: {
-            test: /\.jsx?$/,
+            test: /\.(js|ts|jsx|tsx)?$/,
             or: [
               { include: (Globals.transpilePackages || []).map((p) => new RegExp(p)) },
               { exclude: /node_modules/ },
             ],
+          },
+          options: {
+            useCache: true,
+            useBabel: true,
           },
         }, {
           test: /\.(png|woff|woff2|eot|ttf|svg|gif|jpg|jpeg|bmp|mp4|webm)(\?.*$|$)/,

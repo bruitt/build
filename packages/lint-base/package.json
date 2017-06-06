@@ -7,6 +7,7 @@
     "lint-staged": "./node_modules/.bin/lint-staged"
   },
   "scripts": {
+    "check-ver": "npm-check --skip-unused",
     "postinstall": "mkdir -p ./node_modules/@bruitt && ln -sfn $(pwd) ./node_modules/@bruitt/eslint-config-lint-base"
   },
   "repository": {
@@ -23,5 +24,8 @@
     "eslint-plugin-fp": "^2.3.0",
     "eslint-plugin-import": "^2.2.0",
     "lint-staged": "^3.3.0"
+  },
+  "devDependencies": {
+    "npm-check": "^5.4.0"
   }
 }
