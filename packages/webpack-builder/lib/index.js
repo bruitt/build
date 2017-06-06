@@ -31,6 +31,7 @@ Globals.longTermCaching = !Globals.devServer
 Globals.minimize = !Globals.DEBUG
 
 Globals.colors = !argv.nocolors
+Globals.silent = !!argv.silent
 
 Globals.devServerPort = 3808
 Globals.publicPath = "/"
@@ -224,7 +225,12 @@ function webpackBuilder(appConfig, env) {
             shouldExtract: Globals.styles.extractCss,
           }),
         }, {
-          use: "awesome-typescript-loader",
+          use: [
+            loader: "awesome-typescript-loader",
+            options: {
+              silent: Globals.silent,
+            },
+          ],
           resource: {
             test: /\.(js|ts|jsx|tsx)?$/,
             or: [
