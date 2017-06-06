@@ -1,10 +1,11 @@
 {
   "name": "@bruitt/webpack-builder",
-  "version": "4.1.0",
+  "version": "4.1.1",
   "main": "dist/index.js",
   "bin": {
     "webpack": "./node_modules/.bin/webpack",
-    "webpack-dev-server": "./node_modules/.bin/webpack-dev-server"
+    "webpack-dev-server": "./node_modules/.bin/webpack-dev-server",
+    "tsc": "./node_modules/.bin/tsc"
   },
   "scripts": {
     "build": "babel lib -d dist",
@@ -22,17 +23,6 @@
   "dependencies": {
     "@bruitt/postcss-bundle": "^1.3.0",
     "awesome-typescript-loader": "^3.1.3",
-    "babel-cli": "^6.22.0",
-    "babel-core": "^6.22.0",
-    "babel-loader": "^7.0.0",
-    "babel-plugin-ramda": "^1.1.6",
-    "babel-plugin-transform-react-constant-elements": "^6.22.0",
-    "babel-plugin-transform-react-pure-class-to-function": "^1.0.1",
-    "babel-plugin-transform-react-remove-prop-types": "^0.4.5",
-    "babel-plugin-typecheck": "^3.9.0",
-    "babel-preset-env": "^1.1.8",
-    "babel-preset-react": "^6.22.0",
-    "babel-preset-stage-0": "^6.22.0",
     "css-loader": "^0.28.4",
     "extract-text-webpack-plugin": "^2.0.0-rc",
     "file-loader": "^0.11.2",
@@ -48,11 +38,14 @@
     "stats-webpack-plugin": "^0.6.0",
     "style-loader": "^0.18.2",
     "svg-sprite-loader": "^3.0.5",
+    "typescript": "^2.3.4",
     "url-loader": "^0.5.7",
     "webpack": "^2.2.1",
     "webpack-dev-server": "^2.2.0-rc"
   },
   "devDependencies": {
+    "babel-cli": "^6.22.0",
+    "babel-core": "^6.22.0",
     "@bruitt/eslint-config-lint-base": "^2.1.1",
     "babel-preset-bruitt-lib": "^1.1.0",
     "npm-check": "^5.4.0"

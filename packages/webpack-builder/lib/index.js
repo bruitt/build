@@ -121,7 +121,7 @@ function webpackBuilder(appConfig, env) {
   Globals.styles = Object.assign({}, Globals.styles, appConfig.styles)
   Globals.output = Object.assign({}, Globals.output, appConfig.output)
   Globals.images = Object.assign({}, Globals.images, appConfig.images)
-  Globals.transpilePackages = Globals.transpilePackages.concat(appConfig.transpilePackages || [])
+  Globals.transpilePackages = (Globals.transpilePackages || []).concat(appConfig.transpilePackages || [])
 
   Globals.browserslist = appConfig.browserslist || [ "> 1%", "IE 11" ]
   process.env.BROWSERSLIST = Globals.browserslist
@@ -231,10 +231,6 @@ function webpackBuilder(appConfig, env) {
               { include: (Globals.transpilePackages || []).map((p) => new RegExp(p)) },
               { exclude: /node_modules/ },
             ],
-          },
-          options: {
-            useCache: true,
-            useBabel: true,
           },
         }, {
           test: /\.(png|woff|woff2|eot|ttf|svg|gif|jpg|jpeg|bmp|mp4|webm)(\?.*$|$)/,
