@@ -1,6 +1,6 @@
 {
   "name": "@bruitt/app-entry",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "main": "lib/index.js",
   "scripts": {
     "check-ver": "npm-check --skip-unused",
@@ -15,12 +15,9 @@
   "license": "MIT",
   "dependencies": {
     "@bruitt/hyperscript": "^1.6.0",
-    "babel-polyfill": "^6.23.0",
     "normalize.css": "^7.0.0",
     "preact": "^8.1.0",
     "preact-compat": "^3.16.0",
-    "react": "^15.5.4",
-    "react-dom": "^15.5.4",
     "react-hot-loader": "^3.0.0-beta.6",
     "react-redux": "^5.0.5",
     "redux": "^3.6.0",
