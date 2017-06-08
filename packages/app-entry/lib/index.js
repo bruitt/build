@@ -1,41 +1,25 @@
-import "react-hot-loader/patch"
-// import "babel-polyfill"
 import "normalize.css/normalize.css"
 import "./reset.pcss"
 
 /* eslint-disable */
 import { h, render } from "preact"
-import { AppContainer } from "react-hot-loader"
-import { Provider } from "react-redux"
-import { combineReducers, createStore, applyMiddleware, compose } from "redux"
 import { load as loadWebFonts } from "webfontloader"
 /* eslint-enable */
 
-export let configureStore = (rootReducer, initialState, middlewares = [], enhancers = []) => {
-  if (process.env.WEBFONTLOADER) {
-    loadWebFonts(process.env.WEBFONTLOADER)
-  }
-
-  let createStoreWithMiddleware = compose(
-    applyMiddleware(...middlewares),
-    ...enhancers,
-  )(createStore)
-
-  let getReducers = () => combineReducers(rootReducer)
-
-  let store = createStoreWithMiddleware(getReducers(), initialState)
-
-  return store
+if (process.env.WEBFONTLOADER) {
+  loadWebFonts(process.env.WEBFONTLOADER)
 }
 
-export let wrapAppComponent = (store, Component) => {
-  return h(AppContainer, {},
-    h(Provider, { store }, h(Component)),
-  )
+if (process.env.SENTRY_DSN) {
+  window.Raven.config(process.env.SENTRY_DSN).install()
 }
 
-export let renderAppComponent = (root, store) => (Component) => {
-  let wrappedComponent = wrapAppComponent(store, Component)
+let preloader = document.getElementById("preloader")
+if (preloader) {
+  preloader.remove()
+}
 
-  render(wrappedComponent, root)
+let root = null
+export let renderAppComponent = (rootApp) => () => {
+  root = render(h(rootApp), document.body, root)
 }
