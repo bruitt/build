@@ -2,6 +2,10 @@
   "name": "@bruitt/commit",
   "version": "1.0.0",
   "main": "index.js",
+  "bin": {
+    "commitizen": "./node_modules/.bin/commitizen",
+    "validate-commit-msg": "./node_modules/.bin/validate-commit-msg"
+  },
   "scripts": {
     "check-ver": "npm-check --skip-unused",
     "postinstall": "mkdir -p ./node_modules/@bruitt && ln -sfn $(pwd) ./node_modules/@bruitt/commit"
