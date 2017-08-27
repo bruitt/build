@@ -15,6 +15,7 @@ let ExtractTextPlugin = require("extract-text-webpack-plugin")
 let HtmlWebpackPlugin = require("html-webpack-plugin")
 let PrerenderSpaPlugin = require("prerender-spa-plugin")
 let { CheckerPlugin } = require("awesome-typescript-loader")
+let CopyWebpackPlugin = require('copy-webpack-plugin')
 
 let postcssBundle = require("@bruitt/postcss-bundle").default
 
@@ -126,6 +127,10 @@ function webpackBuilder(appConfig, env) {
 
   Globals.browserslist = appConfig.browserslist || [ "> 1%", "IE 11" ]
   process.env.BROWSERSLIST = Globals.browserslist
+
+  if (defined appConfig.minimize) {
+    Globals.minimize = appConfig.minimize
+  }
 
   Globals.srcScriptsDir = path.resolve(appConfig.globals.srcScriptsDir)
   Globals.buildScriptsDir = path.resolve(appConfig.globals.buildScriptsDir)
