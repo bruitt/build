@@ -1,16 +1,16 @@
-import precss from 'precss'
-import postcssAssets from 'postcss-assets'
-import postcssCssnext from 'postcss-cssnext'
+import precss from "precss"
+import postcssAssets from "postcss-assets"
+import postcssCssnext from "postcss-cssnext"
 
-export default browsers => () => [
+export default (browsers) => () => [
   precss,
   postcssAssets,
   postcssCssnext({
     browsers,
     features: {
       autoprefixer: {
-        flexbox: 'no-2009'
-      }
-    }
-  })
+        flexbox: "no-2009",
+      },
+    },
+  }),
 ]

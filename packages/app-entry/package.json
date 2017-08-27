@@ -4,7 +4,6 @@
   "main": "lib/index.js",
   "scripts": {
     "check-ver": "npm-check --skip-unused",
-    "lint": "eslint ./lib",
     "postinstall": "mkdir -p ./node_modules/@bruitt && ln -sfn $(pwd) ./node_modules/@bruitt/app-entry"
   },
   "repository": {
@@ -20,7 +19,6 @@
     "webfontloader": "^1.6.28"
   },
   "devDependencies": {
-    "@bruitt/eslint-config-lint-base": "^2.1.1",
     "npm-check": "^5.4.0"
   }
 }

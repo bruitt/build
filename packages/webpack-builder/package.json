@@ -11,7 +11,6 @@
     "build": "babel lib -d dist",
     "check-ver": "npm-check --skip-unused",
     "prepublish": "BABEL_ENV=production npm run build",
-    "lint": "eslint ./lib",
     "postinstall": "mkdir -p ./node_modules/@bruitt && ln -sfn $(pwd) ./node_modules/@bruitt/webpack-builder"
   },
   "repository": {
@@ -46,7 +45,6 @@
   "devDependencies": {
     "babel-cli": "^6.22.0",
     "babel-core": "^6.22.0",
-    "@bruitt/eslint-config-lint-base": "^2.1.1",
     "babel-preset-bruitt-lib": "^1.1.0",
     "npm-check": "^5.4.0"
   }

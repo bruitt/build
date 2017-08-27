@@ -1,8 +1,14 @@
 .DS_Store
 .idea
+/ignore
+/log/*.log
+/public
+/tmp
 node_modules
-npm-debug.log
+npm-debug.log*
+yarn-error.log*
+*.iml
+newrelic_agent.log
 dist
 coverage
 .nyc_output
-yarn.lock

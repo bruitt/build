@@ -15,7 +15,7 @@ let ExtractTextPlugin = require("extract-text-webpack-plugin")
 let HtmlWebpackPlugin = require("html-webpack-plugin")
 let PrerenderSpaPlugin = require("prerender-spa-plugin")
 let { CheckerPlugin } = require("awesome-typescript-loader")
-let CopyWebpackPlugin = require('copy-webpack-plugin')
+// let CopyWebpackPlugin = require("copy-webpack-plugin")
 
 let postcssBundle = require("@bruitt/postcss-bundle").default
 
@@ -24,7 +24,7 @@ let target = process.env.TARGET || process.env.NODE_ENV || "development"
 
 let Globals = {}
 
-Globals.DEBUG = (target === "development")
+Globals.DEBUG = target === "development"
 
 Globals.devServer = Globals.DEBUG && !!argv.devServer
 Globals.commonChunks = true
@@ -82,33 +82,39 @@ function webpackBuilder(appConfig, env) {
   }
 
   function getStyleLoaders({ fallback, use, shouldExtract }) {
-    return shouldExtract ?
-      ExtractTextPlugin.extract({ fallback, use }) :
-      [ { loader: fallback }, ...use ]
+    return shouldExtract
+      ? ExtractTextPlugin.extract({ fallback, use })
+      : [{ loader: fallback }, ...use ]
   }
 
   function getFileLoader() {
-    return (Globals.DEBUG ? [
-      {
-        loader: "file-loader",
-        options: {
-          name: Globals.output.media,
+    return (Globals.DEBUG
+      ? [
+        {
+          loader: "file-loader",
+          options: {
+            name: Globals.output.media,
+          },
         },
-      },
-    ] : [
-      {
-        loader: "url-loader",
-        options: {
-          name: Globals.output.media,
-          limit: 12000,
+      ]
+      : [
+        {
+          loader: "url-loader",
+          options: {
+            name: Globals.output.media,
+            limit: 12000,
+          },
         },
-      },
-    ]).concat((Globals.minimize && !!appConfig.images) ? [
-      {
-        loader: "image-webpack-loader",
-        options: Globals.images,
-      },
-    ] : [])
+      ]).concat(
+      Globals.minimize && !!appConfig.images
+        ? [
+          {
+            loader: "image-webpack-loader",
+            options: Globals.images,
+          },
+        ]
+        : [],
+    )
   }
 
   envConfig.NODE_ENV = process.env.NODE_ENV
@@ -123,19 +129,21 @@ function webpackBuilder(appConfig, env) {
   Globals.styles = Object.assign({}, Globals.styles, appConfig.styles)
   Globals.output = Object.assign({}, Globals.output, appConfig.output)
   Globals.images = Object.assign({}, Globals.images, appConfig.images)
-  Globals.transpilePackages = (Globals.transpilePackages || []).concat(appConfig.transpilePackages || [])
+  Globals.transpilePackages = (Globals.transpilePackages || [])
+    .concat(appConfig.transpilePackages || [])
 
   Globals.browserslist = appConfig.browserslist || [ "> 1%", "IE 11" ]
   process.env.BROWSERSLIST = Globals.browserslist
 
-  if (defined appConfig.minimize) {
-    Globals.minimize = appConfig.minimize
-  }
+  // if (defined appConfig.minimize) {
+  //   Globals.minimize = appConfig.minimize
+  // }
 
   Globals.srcScriptsDir = path.resolve(appConfig.globals.srcScriptsDir)
   Globals.buildScriptsDir = path.resolve(appConfig.globals.buildScriptsDir)
 
-  let localIdentName = Globals.styles.cssMangling ? "[hash:base64]"
+  let localIdentName = Globals.styles.cssMangling
+    ? "[hash:base64]"
     : Globals.styles.localIdentName || "ns-[name]-[local]"
 
   let config = {
@@ -143,15 +151,16 @@ function webpackBuilder(appConfig, env) {
 
     entry: appConfig.entries,
 
-    devtool: Globals.DEBUG ?
-      "cheap-module-source-map" :
-      "module-hidden-source-map",
+    devtool: Globals.DEBUG
+      ? "cheap-module-source-map"
+      : "module-hidden-source-map",
 
     output: {
       path: Globals.buildScriptsDir,
       publicPath: Globals.publicPath,
-      filename: Globals.longTermCaching ? Globals.output.js :
-        Globals.output.js.replace(".[chunkhash]", ""),
+      filename: Globals.longTermCaching
+        ? Globals.output.js
+        : Globals.output.js.replace(".[chunkhash]", ""),
     },
 
     stats: {
@@ -182,7 +191,7 @@ function webpackBuilder(appConfig, env) {
 
     resolve: {
       alias: appConfig.alias || {},
-      extensions: [ ".ts", ".tsx", ".js", ".jsx" ]
+      extensions: [ ".ts", ".tsx", ".js", ".jsx" ],
     },
 
     module: {
@@ -198,7 +207,8 @@ function webpackBuilder(appConfig, env) {
                   importLoaders: 1,
                   minimize: Globals.minimize,
                 },
-              }, {
+              },
+              {
                 loader: "postcss-loader",
                 options: {
                   parser: "postcss-scss",
@@ -207,7 +217,8 @@ function webpackBuilder(appConfig, env) {
             ],
             shouldExtract: Globals.styles.extractCss,
           }),
-        }, {
+        },
+        {
           test: /\.pcss$/,
           use: getStyleLoaders({
             fallback: "style-loader",
@@ -220,7 +231,8 @@ function webpackBuilder(appConfig, env) {
                   modules: true,
                   localIdentName,
                 },
-              }, {
+              },
+              {
                 loader: "postcss-loader",
                 options: {
                   parser: "postcss-scss",
@@ -229,33 +241,39 @@ function webpackBuilder(appConfig, env) {
             ],
             shouldExtract: Globals.styles.extractCss,
           }),
-        }, {
-          use: [{
-            loader: "awesome-typescript-loader",
-            options: {
-              silent: Globals.silent,
+        },
+        {
+          use: [
+            {
+              loader: "awesome-typescript-loader",
+              options: {
+                silent: Globals.silent,
+              },
             },
-          }],
+          ],
           resource: {
             test: /\.(js|ts|jsx|tsx)?$/,
             or: [
-              { include: (Globals.transpilePackages || []).map((p) => new RegExp(p)) },
+              {
+                include: (Globals.transpilePackages || [])
+                  .map((p) => new RegExp(p)),
+              },
               { exclude: /node_modules/ },
             ],
           },
-        }, {
+        },
+        {
           test: /\.(png|woff|woff2|eot|ttf|svg|gif|jpg|jpeg|bmp|mp4|webm)(\?.*$|$)/,
           use: getFileLoader(),
           exclude: /symbol/,
-        }, {
+        },
+        {
           test: /symbol(.*)\.svg$/,
           use: "svg-sprite-loader",
-        }, {
+        },
+        {
           test: /\.md$/,
-          use: [
-            { loader: "html-loader" },
-            { loader: "markdown-loader" },
-          ],
+          use: [{ loader: "html-loader" }, { loader: "markdown-loader" }],
         },
       ],
     },
@@ -282,26 +300,36 @@ function webpackBuilder(appConfig, env) {
   }
 
   if (Array.isArray(htmls)) {
+    /* eslint-disable fp/no-mutating-assign */
     let htmlPlugins = htmls.map((item) => {
-      return new HtmlWebpackPlugin(Object.assign(!Globals.minimize ? {} : {
-        minify: {
-          removeComments: true,
-          collapseWhitespace: true,
-          removeRedundantAttributes: true,
-          useShortDoctype: true,
-          removeEmptyAttributes: true,
-          removeStyleLinkTypeAttributes: true,
-          keepClosingSlash: true,
-          minifyJS: true,
-          minifyCSS: true,
-          minifyURLs: true,
-        },
-      }, item))
+      return new HtmlWebpackPlugin(
+        Object.assign(
+          !Globals.minimize
+            ? {}
+            : {
+              minify: {
+                removeComments: true,
+                collapseWhitespace: true,
+                removeRedundantAttributes: true,
+                useShortDoctype: true,
+                removeEmptyAttributes: true,
+                removeStyleLinkTypeAttributes: true,
+                keepClosingSlash: true,
+                minifyJS: true,
+                minifyCSS: true,
+                minifyURLs: true,
+              },
+            },
+          item,
+        ),
+      )
     })
     config.plugins = config.plugins.concat(htmlPlugins)
+    /* eslint-enable fp/no-mutating-assign */
   }
 
   if (Globals.styles.extractCss) {
+    /* eslint-disable fp/no-mutating-methods */
     config.plugins.push(
       new ExtractTextPlugin({
         filename: Globals.output.css,
@@ -309,9 +337,11 @@ function webpackBuilder(appConfig, env) {
         ignoreOrder: true,
       }),
     )
+    /* eslint-enable fp/no-mutating-methods */
   }
 
   if (Globals.minimize) {
+    /* eslint-disable fp/no-mutating-methods */
     config.plugins.push(
       new UglifyJsPlugin({
         compress: {
@@ -329,22 +359,28 @@ function webpackBuilder(appConfig, env) {
       }),
       new AggressiveMergingPlugin(),
     )
+    /* eslint-enable fp/no-mutating-methods */
   }
 
   if (appConfig.prerender) {
-    config.plugins.push(new PrerenderSpaPlugin(
-      Globals.buildScriptsDir,
-      appConfig.prerender.routes || [ "/" ],
-      Object.assign({}, appConfig.prerender.options, {
-        postProcessHtml: (context) => {
-          return context.html.replace(
-            /<span aria-hidden="true"[^>]*>[^<]*<\/span>/gi, "",
-          ).replace(
-            /<style type="text\/css"[^>]*>[^<]*[.tk-|typekit][^<]*<\/style>/gi, "",
-          )
-        },
-      }),
-    ))
+    /* eslint-disable fp/no-mutating-methods */
+    config.plugins.push(
+      new PrerenderSpaPlugin(
+        Globals.buildScriptsDir,
+        appConfig.prerender.routes || [ "/" ],
+        Object.assign({}, appConfig.prerender.options, {
+          postProcessHtml: (context) => {
+            return context.html
+              .replace(/<span aria-hidden="true"[^>]*>[^<]*<\/span>/gi, "")
+              .replace(
+                /<style type="text\/css"[^>]*>[^<]*[.tk-|typekit][^<]*<\/style>/gi,
+                "",
+              )
+          },
+        }),
+      ),
+    )
+    /* eslint-enable fp/no-mutating-methods */
   }
 
   if (Globals.devServer) {
@@ -354,8 +390,10 @@ function webpackBuilder(appConfig, env) {
       historyApiFallback: true,
     }
 
+    /* eslint-disable fp/no-mutating-methods */
     config.plugins.push(new NoErrorsPlugin())
     config.plugins.push(new NamedModulesPlugin())
+    /* eslint-enable fp/no-mutating-methods */
 
     if (appConfig.proxy) {
       config.devServer.proxy = appConfig.proxy

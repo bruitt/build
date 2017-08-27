@@ -1,5 +1,31 @@
 {
+  "private": true,
+  "scripts": {
+    "bootstrap": "lerna bootstrap",
+    "lint": "eslint .",
+    "format": "prettier --no-semi --trailing-comma all --write \"**/*.js\" && eslint --fix .",
+    "postinstall": "npm run bootstrap",
+    "precommit": "lint-staged",
+    "postcheckout": "track-changed checkout",
+    "postmerge": "track-changed merge",
+    "postrewrite": "track-changed rewrite"
+  },
   "devDependencies": {
-    "lerna": "2.0.0-beta.30"
+    "@bruitt/eslint-config-lint-base": "^2.1.3",
+    "husky": "^0.14.3",
+    "lerna": "^2.1.0",
+    "lint-staged": "^4.0.4",
+    "prettier": "^1.5.3",
+    "track-changed": "^1.0.2"
+  },
+  "track-changed": {
+    "yarn.lock": "yarn"
+  },
+  "lint-staged": {
+    "**/*.js": [
+      "prettier --no-semi --trailing-comma all --write",
+      "eslint --fix",
+      "git add"
+    ]
   }
 }

@@ -6,7 +6,8 @@
     "eslint": "./node_modules/.bin/eslint",
     "eslint_d": "./node_modules/.bin/eslint_d",
     "lint-staged": "./node_modules/.bin/lint-staged",
-    "prettier-eslint": "./node_modules/.bin/prettier-eslint"
+    "prettier": "./node_modules/.bin/prettier",
+    "prettier_d": "./node_modules/.bin/prettier_d"
   },
   "scripts": {
     "check-ver": "npm-check --skip-unused",
@@ -21,13 +22,14 @@
   "dependencies": {
     "babel-eslint": "^7.1.1",
     "eslint": "^4.5.0",
-    "eslint_d": "^5.1.0",
     "eslint-config-airbnb-base": "^11.3.0",
     "eslint-plugin-babel": "^4.1.1",
     "eslint-plugin-fp": "^2.3.0",
     "eslint-plugin-import": "^2.2.0",
+    "eslint_d": "^5.1.0",
     "lint-staged": "^3.3.0",
-    "prettier-eslint-cli": "^4.2.1"
+    "prettier": "^1.5.3",
+    "prettier_d": "^5.7.2"
   },
   "devDependencies": {
     "npm-check": "^5.4.0"
