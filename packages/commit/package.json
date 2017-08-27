@@ -1,0 +1,11 @@
+{
+  "name": "commit",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "commitizen": "^2.9.6",
+    "cz-conventional-changelog": "^2.0.0",
+    "validate-commit-msg": "^2.14.0"
+  }
+}
