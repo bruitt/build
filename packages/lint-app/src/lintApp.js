@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   extends: [
     "@bruitt/eslint-config-lint-base",
     "eslint-config-airbnb/rules/react",
