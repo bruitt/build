@@ -12,3 +12,4 @@ newrelic_agent.log
 coverage
 .nyc_output
 yarn.lock
+package-lock.json

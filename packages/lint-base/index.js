@@ -14,10 +14,22 @@ module.exports = {
     "arrow-parens": [ "error", "always" ],
     "class-methods-use-this": [ "error", { exceptMethods: [ "render" ] }],
     "dot-notation": [
-      "error",
+      "warn",
       { allowKeywords: true, allowPattern: "^[A-Z]+[A-Za-z]+$" },
     ],
     "global-require": "warn",
+    "max-len": [
+      "error",
+      80,
+      2,
+      {
+        ignoreUrls: true,
+        ignoreComments: false,
+        ignoreRegExpLiterals: true,
+        ignoreStrings: true,
+        ignoreTemplateLiterals: true,
+      },
+    ],
     "no-constant-condition": [ "error", { checkLoops: false }],
     "no-mixed-operators": [ "error", { allowSamePrecedence: true }],
     "no-underscore-dangle": [ "error", { allowAfterThis: true }],

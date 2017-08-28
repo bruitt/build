@@ -2,18 +2,18 @@
 # yarn lockfile v1
 
 
-"@bruitt/eslint-config-lint-base@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@bruitt/eslint-config-lint-base/-/eslint-config-lint-base-3.0.0.tgz#d93fd1b1331c64efadb81b605044cd92e98b965a"
+"@bruitt/eslint-config-lint-base@^3.0.5":
+  version "3.0.5"
+  resolved "https://registry.yarnpkg.com/@bruitt/eslint-config-lint-base/-/eslint-config-lint-base-3.0.5.tgz#538bcb1e4585159aee8bfb99f31d3e0afa69f046"
   dependencies:
     babel-eslint "^7.1.1"
     eslint "^4.5.0"
     eslint-config-airbnb-base "^11.3.0"
     eslint-plugin-babel "^4.1.1"
     eslint-plugin-fp "^2.3.0"
-    eslint-plugin-import "^2.2.0"
+    eslint-plugin-import "^2.7.0"
     eslint_d "^5.1.0"
-    lint-staged "^3.3.0"
+    lint-staged "^4.0.4"
     prettier "^1.5.3"
     prettier_d "^5.7.2"
 
@@ -776,7 +776,7 @@ eslint-plugin-fp@^2.3.0:
     lodash "^4.13.1"
     req-all "^0.1.0"
 
-eslint-plugin-import@^2.2.0:
+eslint-plugin-import@^2.7.0:
   version "2.7.0"
   resolved "https://registry.yarnpkg.com/eslint-plugin-import/-/eslint-plugin-import-2.7.0.tgz#21de33380b9efb55f5ef6d2e210ec0e07e7fa69f"
   dependencies:
@@ -1436,20 +1436,6 @@ levn@^0.3.0, levn@~0.3.0:
   dependencies:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
-
-lint-staged@^3.3.0:
-  version "3.6.1"
-  resolved "https://registry.yarnpkg.com/lint-staged/-/lint-staged-3.6.1.tgz#24423c8b7bd99d96e15acd1ac8cb392a78e58582"
-  dependencies:
-    app-root-path "^2.0.0"
-    cosmiconfig "^1.1.0"
-    execa "^0.7.0"
-    listr "^0.12.0"
-    lodash.chunk "^4.2.0"
-    minimatch "^3.0.0"
-    npm-which "^3.0.1"
-    p-map "^1.1.1"
-    staged-git-files "0.0.4"
 
 lint-staged@^4.0.4:
   version "4.0.4"
