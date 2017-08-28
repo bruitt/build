@@ -1,6 +1,6 @@
 {
   "name": "@bruitt/eslint-config-lint-app",
-  "version": "3.0.5",
+  "version": "3.0.6",
   "main": "lintApp.js",
   "scripts": {
     "postinstall": "mkdir -p ./node_modules/@bruitt && ln -sfn $(pwd) ./node_modules/@bruitt/eslint-config-lint-app",

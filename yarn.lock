@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@bruitt/eslint-config-lint-base@^3.0.5":
-  version "3.0.5"
-  resolved "https://registry.yarnpkg.com/@bruitt/eslint-config-lint-base/-/eslint-config-lint-base-3.0.5.tgz#538bcb1e4585159aee8bfb99f31d3e0afa69f046"
+"@bruitt/eslint-config-lint-base@^3.0.6":
+  version "3.0.6"
+  resolved "https://registry.yarnpkg.com/@bruitt/eslint-config-lint-base/-/eslint-config-lint-base-3.0.6.tgz#8d2a3024cd582a889d815970e3e7dc5114b413a3"
   dependencies:
     babel-eslint "^7.1.1"
     eslint "^4.5.0"
