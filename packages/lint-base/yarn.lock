@@ -1646,7 +1646,11 @@ prettier@^1.5.3:
   version "1.5.3"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.5.3.tgz#59dadc683345ec6b88f88b94ed4ae7e1da394bfe"
 
-prettier_d@^5.7.2:
+prettier@^1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.6.0.tgz#23e9c68251f440feb847f558821bead21765919a"
+
+prettier_d@^5.7.3:
   version "5.7.3"
   resolved "https://registry.yarnpkg.com/prettier_d/-/prettier_d-5.7.3.tgz#410bad6d0d63d9cd998e3f065b00918ecaabe39c"
   dependencies:

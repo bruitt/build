@@ -1,12 +1,20 @@
 {
   "name": "@bruitt/postcss-bundle",
   "version": "1.3.0",
-  "main": "dist/index.js",
+  "main": "dist/lib/postcssBundle.js",
+  "module": "dist/es/postcssBundle.es.js",
+  "typings": "dist/types/postcssBundle.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "build": "babel lib -d dist",
+    "postinstall": "mkdir -p ./node_modules/@bruitt && ln -sfn $(pwd) ./node_modules/@bruitt/postcss-bundle",
+    "prebuild": "rm -rf dist",
+    "build": "npm run build:commonjs && npm run build:es",
+    "build:es": "tsc --outDir dist/es --module es2015",
+    "build:commonjs": "tsc --outDir dist/lib --module commonjs",
     "check-ver": "npm-check --skip-unused",
-    "prepublish": "BABEL_ENV=production npm run build",
-    "postinstall": "mkdir -p ./node_modules/@bruitt && ln -sfn $(pwd) ./node_modules/@bruitt/postcss-bundle"
+    "prepublishOnly": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -14,15 +22,14 @@
   },
   "author": "Pavel Pertsev <morhetz@gmail.com>",
   "license": "MIT",
-  "devDependencies": {
-    "npm-check": "^5.4.0",
-    "babel-cli": "^6.18.0",
-    "babel-core": "^6.18.0",
-    "babel-preset-bruitt-lib": "^1.1.0"
-  },
   "dependencies": {
     "postcss-assets": "^4.1.0",
     "postcss-cssnext": "^2.8.0",
     "precss": "^1.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^8.0.25",
+    "npm-check": "^5.4.0",
+    "typescript": "^2.4.2"
   }
 }

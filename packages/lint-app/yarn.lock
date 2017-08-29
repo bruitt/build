@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@bruitt/eslint-config-lint-base@^3.0.5":
-  version "3.0.5"
-  resolved "https://registry.yarnpkg.com/@bruitt/eslint-config-lint-base/-/eslint-config-lint-base-3.0.5.tgz#538bcb1e4585159aee8bfb99f31d3e0afa69f046"
+"@bruitt/eslint-config-lint-base@^3.0.9":
+  version "3.0.9"
+  resolved "https://registry.yarnpkg.com/@bruitt/eslint-config-lint-base/-/eslint-config-lint-base-3.0.9.tgz#30d0cd6ad954463164dc6c6e04502d50ba746900"
   dependencies:
     babel-eslint "^7.1.1"
     eslint "^4.5.0"
@@ -14,8 +14,8 @@
     eslint-plugin-import "^2.7.0"
     eslint_d "^5.1.0"
     lint-staged "^4.0.4"
-    prettier "^1.5.3"
-    prettier_d "^5.7.2"
+    prettier "^1.6.0"
+    prettier_d "^5.7.3"
 
 acorn-jsx@^3.0.0:
   version "3.0.1"
@@ -1820,7 +1820,11 @@ prettier@^1.5.3:
   version "1.5.3"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.5.3.tgz#59dadc683345ec6b88f88b94ed4ae7e1da394bfe"
 
-prettier_d@^5.7.2:
+prettier@^1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.6.0.tgz#23e9c68251f440feb847f558821bead21765919a"
+
+prettier_d@^5.7.3:
   version "5.7.3"
   resolved "https://registry.yarnpkg.com/prettier_d/-/prettier_d-5.7.3.tgz#410bad6d0d63d9cd998e3f065b00918ecaabe39c"
   dependencies:
