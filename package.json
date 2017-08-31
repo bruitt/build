@@ -3,7 +3,7 @@
   "scripts": {
     "bootstrap": "lerna bootstrap",
     "lint": "eslint ./**/*.{js,ts}",
-    "format": "prettier --write \"**/*.{js,ts}\" && eslint --fix .",
+    "format": "prettier --write \"**/*.{js,ts}\" && eslint --fix ./**/*.{js,ts} ",
     "postinstall": "npm run bootstrap",
     "precommit": "lint-staged",
     "postcheckout": "track-changed checkout",
@@ -14,8 +14,6 @@
     "@bruitt/eslint-config-lint-base": "^3.0.9",
     "husky": "^0.14.3",
     "lerna": "^2.1.0",
-    "lint-staged": "^4.0.4",
-    "prettier": "^1.5.3",
     "track-changed": "^1.0.2",
     "typescript": "2.4.2",
     "typescript-eslint-parser": "^7.0.0"

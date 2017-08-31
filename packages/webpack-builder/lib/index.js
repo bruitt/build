@@ -39,7 +39,6 @@ Globals.publicPath = "/"
 
 Globals.styles = {}
 Globals.styles.extractCss = Globals.longTermCaching && !Globals.DEBUG
-// Globals.styles.cssMangling = !Globals.DEBUG
 Globals.styles.cssMangling = false
 Globals.styles.localIdentName = "ns-[name]-[local]"
 
