@@ -1,6 +1,6 @@
 {
   "name": "@bruitt/webpack-builder",
-  "version": "4.0.8",
+  "version": "4.0.9",
   "main": "dist/index.js",
   "bin": {
     "webpack": "./node_modules/.bin/webpack",
@@ -49,7 +49,8 @@
     "svg-sprite-loader": "0.2.1",
     "url-loader": "^0.5.7",
     "webpack": "^2.2.1",
-    "webpack-dev-server": "^2.2.0-rc"
+    "webpack-dev-server": "^2.2.0-rc",
+    "webpack-sentry-plugin": "^1.14.0"
   },
   "devDependencies": {
     "@bruitt/eslint-config-lint-base": "^2.1.1",
