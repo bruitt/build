@@ -13,7 +13,7 @@ let NamedModulesPlugin = require("webpack/lib/NamedModulesPlugin")
 let StatsPlugin = require("stats-webpack-plugin")
 let ExtractTextPlugin = require("extract-text-webpack-plugin")
 let HtmlWebpackPlugin = require("html-webpack-plugin")
-let PrerenderSpaPlugin = require("prerender-spa-plugin")
+// let PrerenderSpaPlugin = require("prerender-spa-plugin")
 
 let SentryPlugin = require("webpack-sentry-plugin")
 
@@ -345,24 +345,24 @@ function webpackBuilder(appConfig, env) {
     )
   }
 
-  if (appConfig.prerender) {
-    config.plugins.push(
-      new PrerenderSpaPlugin(
-        Globals.buildScriptsDir,
-        appConfig.prerender.routes || [ "/" ],
-        Object.assign({}, appConfig.prerender.options, {
-          postProcessHtml: (context) => {
-            return context.html
-              .replace(/<span aria-hidden="true"[^>]*>[^<]*<\/span>/gi, "")
-              .replace(
-                /<style type="text\/css"[^>]*>[^<]*[.tk-|typekit][^<]*<\/style>/gi,
-                "",
-              )
-          },
-        }),
-      ),
-    )
-  }
+  // if (appConfig.prerender) {
+  //   config.plugins.push(
+  //     new PrerenderSpaPlugin(
+  //       Globals.buildScriptsDir,
+  //       appConfig.prerender.routes || [ "/" ],
+  //       Object.assign({}, appConfig.prerender.options, {
+  //         postProcessHtml: (context) => {
+  //           return context.html
+  //             .replace(/<span aria-hidden="true"[^>]*>[^<]*<\/span>/gi, "")
+  //             .replace(
+  //               /<style type="text\/css"[^>]*>[^<]*[.tk-|typekit][^<]*<\/style>/gi,
+  //               "",
+  //             )
+  //         },
+  //       }),
+  //     ),
+  //   )
+  // }
 
   if (appConfig.sentry && process.env.RELEASE) {
     config.plugins.push(
