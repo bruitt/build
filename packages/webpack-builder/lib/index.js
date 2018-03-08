@@ -370,7 +370,7 @@ function webpackBuilder(appConfig, env) {
         // Sentry options are required
         organization: appConfig.sentry.organization,
         project: appConfig.sentry.project,
-        apiKey: appConfig.sentry.apiKey,
+        apiKey: process.env.SENTRY_AUTH_TOKEN || appConfig.sentry.apiKey,
         // Release version name/hash is required
         release: process.env.RELEASE,
       }),
