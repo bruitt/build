@@ -1,5 +1,43 @@
 {
+  "name": "@paysend/build",
+  "private": true,
+  "version": "1.0.0",
+  "engines": {
+    "node": ">=10.0"
+  },
+  "scripts": {
+    "bootstrap": "lerna bootstrap",
+    "check-ver": "npm-check --skip-unused",
+    "commitmsg": "validate-commit-msg",
+    "cz": "git-cz",
+    "lint": "eslint \"**/*.{js,ts,jsx,tsx}\"",
+    "format": "prettier --write \"**/*.{js,ts,jsx,tsx}\" && eslint --fix \"**/*.{js,ts,jsx,tsx}\"",
+    "postinstall": "npm run bootstrap",
+    "precommit": "lint-staged",
+    "postcheckout": "track-changed checkout",
+    "postmerge": "track-changed merge",
+    "postrewrite": "track-changed rewrite"
+  },
   "devDependencies": {
-    "lerna": "2.0.0-beta.30"
+    "@bruitt/commit": "^1.0.0",
+    "@bruitt/eslint-config-lint-base": "^4.0.2",
+    "npm-check": "^5.4.0",
+    "lerna": "2.11.0",
+    "typescript": "^2.9.2"
+  },
+  "track-changed": {
+    "yarn.lock": "yarn"
+  },
+  "lint-staged": {
+    "**/*.{js,ts}": [
+      "prettier --write",
+      "eslint --fix",
+      "git add"
+    ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }

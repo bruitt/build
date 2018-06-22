@@ -1,0 +1,8 @@
+{
+  "parser": "typescript-eslint-parser",
+  "extends": "@bruitt/eslint-config-lint-base",
+  "env": {
+    "node": true,
+    "browser": true
+  }
+}

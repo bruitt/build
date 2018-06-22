@@ -1,10 +1,18 @@
 {
   "name": "@bruitt/eslint-config-lint-base",
-  "version": "1.0.0",
+  "version": "4.0.3",
   "main": "index.js",
   "bin": {
     "eslint": "./node_modules/.bin/eslint",
-    "lint-staged": "./node_modules/.bin/lint-staged"
+    "eslint_d": "./node_modules/.bin/eslint_d",
+    "lint-staged": "./node_modules/.bin/lint-staged",
+    "prettier": "./node_modules/.bin/prettier",
+    "prettier_d": "./node_modules/.bin/prettier_d",
+    "track-changed": "./node_modules/.bin/track-changed"
+  },
+  "scripts": {
+    "postinstall": "mkdir -p ./node_modules/@bruitt && ln -sfn $(pwd) ./node_modules/@bruitt/eslint-config-lint-base",
+    "check-ver": "npm-check --skip-unused"
   },
   "repository": {
     "url": "git@github.com:bruitt/build.git",
@@ -13,10 +21,20 @@
   "author": "Pavel Pertsev <morhetz@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "babel-eslint": "^7.1.1",
-    "eslint": "^3.12.0",
-    "eslint-config-airbnb-base": "^10.0.1",
-    "eslint-plugin-import": "^2.2.0",
-    "lint-staged": "^3.2.2"
+    "babel-eslint": "^8.2.0",
+    "eslint": "^4.19.0",
+    "eslint-config-airbnb-base": "^13.0.0",
+    "eslint-plugin-babel": "^5.1.0",
+    "eslint-plugin-fp": "^2.3.0",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint_d": "^5.1.0",
+    "lint-staged": "^7.2.0",
+    "prettier": "^1.6.0",
+    "prettier_d": "^5.7.3",
+    "track-changed": "^1.0.2",
+    "typescript-eslint-parser": "^16.0.0"
+  },
+  "devDependencies": {
+    "npm-check": "^5.4.0"
   }
 }
