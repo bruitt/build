@@ -1,6 +1,6 @@
 {
   "name": "@bruitt/app-entry",
-  "version": "4.0.9",
+  "version": "4.0.10",
   "main": "lib/index.js",
   "scripts": {
     "check-ver": "npm-check --skip-unused",
@@ -14,17 +14,10 @@
   "author": "Pavel Pertsev <morhetz@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@bruitt/hyperscript": "^1.5.0",
-    "babel-polyfill": "^6.22.0",
-    "normalize.css": "^5.0.0",
-    "preact": "8.1.0",
-    "preact-compat": "3.14.3",
-    "react": "^15.4.2",
-    "react-dom": "^15.4.2",
-    "react-hot-loader": "^3.0.0-beta.5",
-    "react-redux": "^5.0.2",
-    "redux": "^3.6.0",
-    "webfontloader": "^1.6.27"
+    "@bruitt/hyperscript": "^1.6.0",
+    "normalize.css": "^8.0.0",
+    "preact": "^8.2.7",
+    "preact-compat": "^3.18.0"
   },
   "devDependencies": {
     "@bruitt/eslint-config-lint-base": "^2.1.1",

@@ -1,5 +1,18 @@
 {
+  "name": "@paysend/build",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "commitmsg": "validate-commit-msg",
+    "cz": "git-cz"
+  },
   "devDependencies": {
-    "lerna": "2.0.0-beta.30"
+    "lerna": "2.0.0-beta.30",
+    "@bruitt/commit": "^1.0.0"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }

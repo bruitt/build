@@ -1,33 +1,32 @@
 let minimist = require("minimist")
 let path = require("path")
 
-let AggressiveMergingPlugin = require("webpack/lib/optimize/AggressiveMergingPlugin")
-let UglifyJsPlugin = require("webpack/lib/optimize/UglifyJsPlugin")
+let proxy = require("http-proxy-middleware")
+let history = require("connect-history-api-fallback")
+let convert = require("koa-connect")
 
-let CommonsChunkPlugin = require("webpack/lib/optimize/CommonsChunkPlugin")
 let DefinePlugin = require("webpack/lib/DefinePlugin")
-let LoaderOptionsPlugin = require("webpack/lib/LoaderOptionsPlugin")
-let NoErrorsPlugin = require("webpack/lib/NoErrorsPlugin")
-let NamedModulesPlugin = require("webpack/lib/NamedModulesPlugin")
 
-let StatsPlugin = require("stats-webpack-plugin")
-let ExtractTextPlugin = require("extract-text-webpack-plugin")
+let ManifestPlugin = require("webpack-manifest-plugin")
+let MiniCssExtractPlugin = require("mini-css-extract-plugin")
 let HtmlWebpackPlugin = require("html-webpack-plugin")
-// let PrerenderSpaPlugin = require("prerender-spa-plugin")
-
+let HtmlWebpackExcludeAssetsPlugin = require("html-webpack-exclude-assets-plugin")
+let CopyWebpackPlugin = require("copy-webpack-plugin")
 let SentryPlugin = require("webpack-sentry-plugin")
 
 let postcssBundle = require("@bruitt/postcss-bundle").default
 
+let babelOptions = require("../babel")
+
 let argv = minimist(process.argv.slice(2)).env || {}
-let target = process.env.TARGET || process.env.NODE_ENV || "development"
+let target = process.env.TARGET || process.env.NODE_ENV || "production"
 
 let Globals = {}
 
 Globals.DEBUG = target === "development"
 
 Globals.devServer = Globals.DEBUG && !!argv.devServer
-Globals.commonChunks = true
+// Globals.commonChunks = true
 Globals.longTermCaching = !Globals.devServer
 Globals.minimize = !Globals.DEBUG
 
@@ -38,14 +37,15 @@ Globals.publicPath = "/"
 
 Globals.styles = {}
 Globals.styles.extractCss = Globals.longTermCaching && !Globals.DEBUG
-// Globals.styles.cssMangling = !Globals.DEBUG
 Globals.styles.cssMangling = false
 Globals.styles.localIdentName = "ns-[name]-[local]"
 
+let assetsDir = process.env.CDN_URL ? "" : "assets/"
 Globals.output = {}
-Globals.output.js = "assets/js/[name].[chunkhash].js"
-Globals.output.css = "assets/css/[name].[contenthash].css"
-Globals.output.media = "assets/media/[name].[hash].[ext]"
+Globals.output.js = `${assetsDir}js/[name].[chunkhash].js`
+Globals.output.css = `${assetsDir}css/[name].[hash].css`
+Globals.output.cssChunk = `${assetsDir}css/[id].[hash].css`
+Globals.output.media = `${assetsDir}media/[name].[hash].[ext]`
 
 Globals.images = {
   optipng: { optimizationLevel: 7 },
@@ -55,6 +55,9 @@ Globals.images = {
     speed: 4,
   },
   mozjpeg: { quality: 77 },
+  svgo: {
+    plugins: [{ collapseGroups: false }],
+  },
 }
 
 Globals.transpilePackages = [ "@bruitt/app-entry", "preact-compat" ]
@@ -64,32 +67,14 @@ process.env.NODE_ENV = Globals.DEBUG ? "development" : "production"
 process.env.BABEL_ENV = Globals.DEBUG ? "development" : "production"
 
 function webpackBuilder(appConfig, env) {
-  let envConfig = { ...env }
-
-  if (appConfig.history) {
-    envConfig.HISTORY = appConfig.history
-  } else {
-    envConfig.HISTORY = {}
-    Object.keys(appConfig.entries).forEach((key) => {
-      // let k = (key === "index") ? "" : key
-      let entry = appConfig.entries[key]
-      let entryName = path.basename(entry, ".js")
-      if (key !== "index") {
-        envConfig.HISTORY[entryName] = { basename: `/${key}` }
-      } else {
-        envConfig.HISTORY[entryName] = { basename: "" }
-      }
-    })
-  }
-
   function getStyleLoaders({ fallback, use, shouldExtract }) {
     return shouldExtract
-      ? ExtractTextPlugin.extract({ fallback, use })
+      ? [ MiniCssExtractPlugin.loader, ...use ]
       : [{ loader: fallback }, ...use ]
   }
 
   function getFileLoader() {
-    return (Globals.DEBUG
+    return Globals.DEBUG
       ? [
         {
           loader: "file-loader",
@@ -106,25 +91,17 @@ function webpackBuilder(appConfig, env) {
             limit: 12000,
           },
         },
-      ]).concat(
-      Globals.minimize && !!appConfig.images
-        ? [
-          {
-            loader: "image-webpack-loader",
-            options: Globals.images,
-          },
-        ]
-        : [],
-    )
+      ].concat(
+          Globals.minimize === true || Globals.minimize.images
+            ? [
+              {
+                loader: "image-webpack-loader",
+                options: Globals.images,
+              },
+            ]
+            : [],
+        )
   }
-
-  envConfig.NODE_ENV = process.env.NODE_ENV
-  envConfig.TARGET = process.env.TARGET
-
-  let processEnv = {}
-  Object.keys(envConfig).forEach((key) => {
-    processEnv[key] = JSON.stringify(envConfig[key])
-  })
 
   Globals = Object.assign({}, Globals, appConfig.globals)
   Globals.styles = Object.assign({}, Globals.styles, appConfig.styles)
@@ -145,20 +122,21 @@ function webpackBuilder(appConfig, env) {
     : Globals.styles.localIdentName || "ns-[name]-[local]"
 
   let config = {
-    cache: Globals.DEBUG,
+    mode: Globals.DEBUG ? "development" : "production",
 
     entry: appConfig.entries,
 
-    devtool: Globals.DEBUG
-      ? "cheap-module-source-map"
-      : "module-hidden-source-map",
+    devtool: Globals.DEBUG ? "cheap-module-source-map" : "source-map",
+
+    target: target === "ssr" ? "node" : "web",
 
     output: {
       path: Globals.buildScriptsDir,
-      publicPath: Globals.publicPath,
+      publicPath: process.env.CDN_URL || Globals.publicPath,
       filename: Globals.longTermCaching
         ? Globals.output.js
         : Globals.output.js.replace(".[chunkhash]", ""),
+      libraryTarget: target === "ssr" ? "commonjs2" : "var",
     },
 
     stats: {
@@ -167,23 +145,10 @@ function webpackBuilder(appConfig, env) {
     },
 
     plugins: [
-      new LoaderOptionsPlugin({
-        debug: Globals.DEBUG,
-        minimize: Globals.MINIMIZE,
-        options: {
-          postcss: postcssBundle(Globals.browserslist),
-        },
-      }),
       new DefinePlugin({
-        "process.env": processEnv,
+        "process.env.TARGET": JSON.stringify(process.env.TARGET),
       }),
-      new StatsPlugin("manifest.json", {
-        chunkModules: false,
-        source: false,
-        chunks: false,
-        modules: false,
-        assets: true,
-      }),
+      new ManifestPlugin(),
     ],
 
     resolve: {
@@ -201,13 +166,14 @@ function webpackBuilder(appConfig, env) {
                 loader: "css-loader",
                 options: {
                   importLoaders: 1,
-                  minimize: Globals.minimize,
+                  minimize: Globals.minimize === true || Globals.minimize.css,
                 },
               },
               {
                 loader: "postcss-loader",
                 options: {
                   parser: "postcss-scss",
+                  plugins: postcssBundle(Globals.browserslist),
                 },
               },
             ],
@@ -223,7 +189,7 @@ function webpackBuilder(appConfig, env) {
                 loader: "css-loader",
                 options: {
                   importLoaders: 1,
-                  minimize: Globals.minimize,
+                  minimize: Globals.minimize === true || Globals.minimize.css,
                   modules: true,
                   localIdentName,
                 },
@@ -232,6 +198,7 @@ function webpackBuilder(appConfig, env) {
                 loader: "postcss-loader",
                 options: {
                   parser: "postcss-scss",
+                  plugins: postcssBundle(Globals.browserslist),
                 },
               },
             ],
@@ -239,13 +206,17 @@ function webpackBuilder(appConfig, env) {
           }),
         },
         {
-          use: "babel-loader",
+          use: {
+            loader: "babel-loader",
+            options: babelOptions,
+          },
           resource: {
             test: /\.jsx?$/,
             or: [
               {
-                include: (Globals.transpilePackages || [])
-                  .map((p) => new RegExp(p)),
+                include: (Globals.transpilePackages || []).map(
+                  (p) => new RegExp(p),
+                ),
               },
               { exclude: /node_modules/ },
             ],
@@ -268,18 +239,10 @@ function webpackBuilder(appConfig, env) {
     },
   }
 
-  if (Globals.commonChunks && Array.isArray(appConfig.commons)) {
-    let commons = appConfig.commons.map((chunk) => {
-      return new CommonsChunkPlugin(chunk)
-    })
-    config.plugins = config.plugins.concat(commons)
-  }
-
   let { htmls } = appConfig
 
   if (!!htmls && !Array.isArray(htmls) && !!htmls.template) {
     htmls = Object.keys(appConfig.entries).map((key) => {
-      // let k = (key === "index") ? "" : key
       return {
         template: htmls.template,
         filename: `${key}.html`,
@@ -289,120 +252,116 @@ function webpackBuilder(appConfig, env) {
   }
 
   if (Array.isArray(htmls)) {
-    let htmlPlugins = htmls.map((item) => {
-      return new HtmlWebpackPlugin(
-        Object.assign(
-          !Globals.minimize
-            ? {}
-            : {
-              minify: {
-                removeComments: true,
-                collapseWhitespace: true,
-                removeRedundantAttributes: true,
-                useShortDoctype: true,
-                removeEmptyAttributes: true,
-                removeStyleLinkTypeAttributes: true,
-                keepClosingSlash: true,
-                minifyJS: true,
-                minifyCSS: true,
-                minifyURLs: true,
-              },
-            },
-          item,
-        ),
-      )
-    })
+    let htmlPlugins = htmls
+      .map((item) => {
+        return new HtmlWebpackPlugin(
+          Object.assign(
+            Globals.minimize === true || Globals.minimize.html
+              ? {
+                minify: {
+                  removeComments: true,
+                  collapseWhitespace: true,
+                  removeRedundantAttributes: true,
+                  useShortDoctype: true,
+                  removeEmptyAttributes: true,
+                  removeStyleLinkTypeAttributes: true,
+                  keepClosingSlash: true,
+                  minifyJS: true,
+                  minifyCSS: true,
+                  minifyURLs: true,
+                },
+              }
+              : {},
+            item,
+          ),
+        )
+      })
+      .concat([ new HtmlWebpackExcludeAssetsPlugin() ])
+
     config.plugins = config.plugins.concat(htmlPlugins)
   }
 
   if (Globals.styles.extractCss) {
     config.plugins.push(
-      new ExtractTextPlugin({
+      new MiniCssExtractPlugin({
         filename: Globals.output.css,
-        allChunks: true,
-        ignoreOrder: true,
+        chunkFilename: Globals.output.cssChunk,
       }),
     )
   }
 
-  if (Globals.minimize) {
-    config.plugins.push(
-      new UglifyJsPlugin({
-        compress: {
-          screw_ie8: true,
-          warnings: false,
-        },
-        mangle: {
-          screw_ie8: true,
-        },
-        output: {
-          comments: false,
-          screw_ie8: true,
-        },
-        sourceMap: true,
-      }),
-      new AggressiveMergingPlugin(),
-    )
+  if (appConfig.sentry && process.env.GIT_TAG && process.env.GIT_SHA) {
+    if (!process.env.SENTRY_AUTH_TOKEN || appConfig.sentry.authToken) {
+      console.log("Missing sentry auth token")
+    } else {
+      config.plugins.push(
+        new SentryPlugin({
+          organization: appConfig.sentry.organization,
+          project: appConfig.sentry.project,
+          apiKey: process.env.SENTRY_AUTH_TOKEN || appConfig.sentry.apiKey,
+          release: process.env.GIT_TAG,
+          releaseBody: (version, projects) => {
+            let release = { version, projects }
+            if (!appConfig.github.repo) {
+              return release
+            }
+            return {
+              ...release,
+              refs: [
+                {
+                  repository: appConfig.github.repo,
+                  commit: process.env.GIT_SHA,
+                },
+              ],
+            }
+          },
+        }),
+      )
+    }
   }
 
-  // if (appConfig.prerender) {
-  //   config.plugins.push(
-  //     new PrerenderSpaPlugin(
-  //       Globals.buildScriptsDir,
-  //       appConfig.prerender.routes || [ "/" ],
-  //       Object.assign({}, appConfig.prerender.options, {
-  //         postProcessHtml: (context) => {
-  //           return context.html
-  //             .replace(/<span aria-hidden="true"[^>]*>[^<]*<\/span>/gi, "")
-  //             .replace(
-  //               /<style type="text\/css"[^>]*>[^<]*[.tk-|typekit][^<]*<\/style>/gi,
-  //               "",
-  //             )
-  //         },
-  //       }),
-  //     ),
-  //   )
-  // }
-
-  if (appConfig.sentry && process.env.RELEASE) {
-    config.plugins.push(
-      new SentryPlugin({
-        // Sentry options are required
-        organization: appConfig.sentry.organization,
-        project: appConfig.sentry.project,
-        apiKey: process.env.SENTRY_AUTH_TOKEN || appConfig.sentry.apiKey,
-        // Release version name/hash is required
-        release: process.env.RELEASE,
-      }),
-    )
-  }
+  config.plugins.push(
+    new CopyWebpackPlugin(
+      [
+        {
+          from: path.join(Globals.srcScriptsDir, "assets"),
+          to: path.join(Globals.buildScriptsDir, assetsDir),
+        },
+      ],
+      {},
+    ),
+  )
 
   if (Globals.devServer) {
-    config.devServer = {
+    config.serve = {
+      content: "src/",
+      host: "0.0.0.0",
       port: Globals.devServerPort,
-      headers: { "Access-Control-Allow-Origin": "*" },
-      historyApiFallback: true,
-    }
-
-    config.plugins.push(new NoErrorsPlugin())
-    config.plugins.push(new NamedModulesPlugin())
-
-    if (appConfig.proxy) {
-      config.devServer.proxy = appConfig.proxy
-    }
-
-    if (appConfig.historyApiFallback) {
-      config.devServer.historyApiFallback = appConfig.historyApiFallback
-    } else {
-      let rewrites = Object.keys(appConfig.entries).map((key) => {
-        // let k = (key === "index") ? "" : key
-        return {
-          from: new RegExp(`/${key}`),
-          to: `/${key}.html`,
+      open: true,
+      add: (app, middleware, options) => {
+        if (appConfig.proxy) {
+          let proxyKeys = Object.keys(appConfig.proxy)
+          proxyKeys.forEach((proxyKey) => {
+            app.use(convert(proxy(proxyKey, appConfig.proxy[proxyKey])))
+          })
         }
-      })
-      config.devServer.historyApiFallback = { rewrites }
+        app.use(convert(history()))
+      },
+      // headers: { "Access-Control-Allow-Origin": "*" },
     }
+
+    // if (appConfig.historyApiFallback) {
+    //   config.devServer.historyApiFallback = appConfig.historyApiFallback
+    // } else {
+    //   let rewrites = Object.keys(appConfig.entries).map((key) => {
+    //     // let k = (key === "index") ? "" : key
+    //     return {
+    //       from: new RegExp(`/${key}`),
+    //       to: `/${key}.html`,
+    //     }
+    //   })
+    //   config.devServer.historyApiFallback = { rewrites }
+    // }
   }
 
   return config
